@@ -230,10 +230,12 @@ function shortUrl(u) {
 
 /* ---------- URL registry: one verified state per URL ---------- */
 const URLS = new Map();
+const US = ((W.meta || {}).link_check || {}).url_status || {};
+const US_LABEL = { ok: 'verified', partial: 'partial', blocked: 'blocked', unreadable: 'unreadable', dead: 'dead' };
 function noteUrl(u, info = {}) {
   if (!u || typeof u !== 'string') return;
   const cur = URLS.get(u) || { verified: false, tags: new Set() };
-  if (info.verified === true) cur.verified = true;
+  if (info.verified === true || ['ok', 'partial'].includes((US[u] || {}).status)) cur.verified = true;
   if (info.tag) cur.tags.add(info.tag);
   URLS.set(u, cur);
 }
@@ -324,9 +326,12 @@ const filtersActive = () => TOKENS.length || S.kinds.size || S.basis || S.src ||
 function linkRow(u) {
   const r = URLS.get(u) || { verified: false };
   const tag = urlTag(u);
-  const vp = r.verified
-    ? '<span class="pill v-yes" title="verified: true in the wiki JSON">verified</span>'
-    : '<span class="pill v-no" title="verified: false in the wiki JSON. Seen in search results only; page not opened.">unverified</span>';
+  const s = US[u] || {};
+  const tip = s.note ? ` title="${esc(s.note)}"` : '';
+  const vp = s.status && s.status !== 'ok'
+    ? `<span class="pill ${s.status === 'partial' ? 'v-yes' : 'v-no'}"${tip}>${US_LABEL[s.status] || s.status}</span>`
+    : r.verified ? `<span class="pill v-yes"${tip || ' title="verified: true in the wiki JSON"'}>verified</span>`
+    : '<span class="pill v-no" title="verified: false and no link-check record">unverified</span>';
   const tp = tag ? `<span class="pill src ${tag === 'isaca' ? 'isaca' : ''}" title="Source type">${esc(SRC_LABEL[tag] || tag)}</span>`
                  : '<span class="pill src" title="No source type recorded in the wiki JSON">type not recorded</span>';
   return `<div class="link">${vp}${tp}<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(u)}">${TOKEN_RE ? hl(shortUrl(u)) : esc(shortUrl(u))}</a></div>`;
@@ -345,6 +350,9 @@ function domPills(e) {
   return e.domains.map(id => `<a class="pill dom" data-d="${id}" href="#${id}" title="${esc(DMAP[id].name)}">${id}</a>`).join('');
 }
 function kindPill(e, show) { return show ? `<span class="pill kind">${KINDS[e.kind].one}</span>` : ''; }
+function lcRows(o) {
+  return [['Link check', o.link_check], ['Dead links removed', asList(o.dead_links).map(d => `${d.url} (${d.field}): ${d.note}`)]];
+}
 function kv(pairs) {
   const rows = pairs.filter(([, v]) => v != null && v !== '' && !(Array.isArray(v) && !v.length));
   if (!rows.length) return '';
@@ -354,44 +362,47 @@ function kv(pairs) {
 const R = {
   subtopic: (e, ctx) => { const s = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${s.part ? `<span class="mono muted">${esc(s.part)}.</span> ` : ''}${hl(s.name)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${basisPill(s.basis)}</div>
-    ${kv([['Definition', s.definition], ['Why the auditor cares', s.why_auditor_cares], ['Exam distinctions', asList(s.exam_distinctions)], ['Note', s.note]])}
+    ${kv([['Definition', s.definition], ['Why the auditor cares', s.why_auditor_cares], ['Exam distinctions', asList(s.exam_distinctions)], ['Note', s.note], ['Name note', s.name_note], ...lcRows(s)])}
     ${links(e.urls, 'No source URL. Written from general CISA body of knowledge.')}</article>`; },
   trap: (e, ctx) => { const t = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(t.confused_concepts)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${basisPill(t.basis)}</div>
-    ${kv([['Rule', t.rule], ['Note', t.note]])}${links(e.urls)}</article>`; },
+    ${kv([['Rule', t.rule], ['Note', t.note], ...lcRows(t)])}${links(e.urls)}</article>`; },
   example: (e, ctx) => { const x = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(x.name)} <span class="muted mono" style="font-weight:400;font-size:.85em">${hl(x.date)}</span></h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${srcPill(x.source_type)}</div>
-    ${kv([['What happened', x.what_happened], ['Control', x.control_failed_or_worked], ['Maps to', x.maps_to_subtopic], ['Note', x.note]])}${links(e.urls)}</article>`; },
+    ${kv([['What happened', x.what_happened], ['Control', x.control_failed_or_worked], ['Maps to', x.maps_to_subtopic], ['Note', x.note], ...lcRows(x)])}${links(e.urls)}</article>`; },
   resource: (e, ctx) => { const r = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(r.title)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${srcPill(r.source_type)}</div>
-    ${kv([['Publisher', r.publisher], ['Type', r.type], ['Relevance', r.relevance], ['Note', r.note]])}${links(e.urls)}</article>`; },
+    ${kv([['Publisher', r.publisher], ['Type', r.type], ['Relevance', r.relevance], ['Note', r.note], ...lcRows(r)])}${links(e.urls)}</article>`; },
   video: (e, ctx) => { const v = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(v.title || v.title_as_seen || v.url)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}</div>
     ${kv(Object.entries(v).filter(([k]) => !['title', 'url', 'verified'].includes(k)).map(([k, val]) => [k.replace(/_/g, ' '), typeof val === 'object' ? JSON.stringify(val) : val]))}${links(e.urls)}</article>`; },
   theme: (e, ctx) => { const t = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(t.theme)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}${basisPill(t.basis)}</div>
-    ${kv([['Description', t.description]])}${links(e.urls)}</article>`; },
+    ${kv([['Description', t.description], ...lcRows(t)])}${links(e.urls)}</article>`; },
   glossary: (e, ctx) => { const g = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(g.term)}</h3>${kindPill(e, ctx.mixed)}${basisPill(g.basis)}</div>
-    ${kv([['Definition', g.definition], ['Note', g.note]])}${links(e.urls)}</article>`; },
+    ${kv([['Definition', g.definition], ['Note', g.note], ...lcRows(g)])}${links(e.urls)}</article>`; },
   conflict: (e, ctx) => { const c = e.raw; return `<article class="entry conflict" id="conflict-${e.idx}">
-    <div class="ehead"><h3>${hl(c.topic)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}<span class="pill cand">unresolved</span></div>
+    <div class="ehead"><h3>${hl(c.topic)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}<span class="pill cand">${/^Resolved/.test(c.notes || '') ? 'checked against primary source' : 'listed, not resolved'}</span></div>
     <div class="pos">
       <div class="isa"><span class="eyebrow">ISACA position</span><p>${hl(c.isaca_position) || '<span class="muted">Not stated</span>'}</p>${links(extractUrls(c.isaca_source), 'No ISACA source URL.')}</div>
       <div><span class="eyebrow">Third-party position</span><p>${hl(c.third_party_position) || '<span class="muted">Not stated</span>'}</p>${links(extractUrls(c.third_party_source), 'No third-party source URL.')}</div>
     </div>
-    ${c.notes ? `<p class="muted" style="font-size:.88rem">${hl(c.notes)}</p>` : ''}</article>`; },
+    ${c.notes ? `<p class="muted" style="font-size:.88rem">${hl(c.notes)}</p>` : ''}${kv(lcRows(c))}</article>`; },
   unverified: (e, ctx) => { const u = e.raw; const isVid = !!u.video_id; return `<article class="entry unv">
-    <div class="ehead"><h3>${hl(isVid ? (u.title_as_seen || u.item) : u.item)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${isVid ? '<span class="pill cand">video candidate · not opened</span>' : ''}</div>
-    ${kv([isVid ? ['Channel', u.channel] : ['', null], ['Reason', u.reason], ['Needed action', u.needed_action], ['Attempt', u.attempt]])}
+    <div class="ehead"><h3>${hl(isVid ? (u.title_as_seen || u.item) : u.item)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${isVid ? '<span class="pill cand">video candidate</span>' : ''}${u.status === 'resolved' ? '<span class="pill v-yes">resolved</span>' : ''}</div>
+    ${kv([isVid ? ['Channel', u.channel] : ['', null], isVid ? ['Title (oEmbed)', u.title_confirmed] : ['', null], ['Reason', u.reason], ['Needed action', u.needed_action], ['Attempt', u.attempt]])}
     ${u.url ? links(e.urls) : ''}</article>`; },
 };
 
 function sourceTable(list) {
   return `<div class="tbl-wrap"><table class="src"><thead><tr><th>Status</th><th>Type</th><th>URL</th><th>Note</th></tr></thead><tbody>${list.map(e => {
-    const u = e.raw.url, r = URLS.get(u) || {};
-    return `<tr><td>${r.verified ? '<span class="pill v-yes">verified</span>' : '<span class="pill v-no">unverified</span>'}</td><td>${srcPill(e.raw.tag) || '<span class="muted">—</span>'}</td>
-      <td><a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(u)}">${hl(shortUrl(u))}</a></td><td>${hl(e.raw.note)}</td></tr>`; }).join('')}</tbody></table></div>`;
+    const u = e.raw.url, dead = asList(e.raw.dead_links)[0];
+    const st = u ? linkRow(u).match(/<span class="pill [^"]*"[^>]*>[^<]*<\/span>/)[0] : '<span class="pill v-no">dead</span>';
+    const cell = u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(u)}">${hl(shortUrl(u))}</a>` : `<span class="muted" title="${esc(dead ? dead.note : '')}">${esc(dead ? shortUrl(dead.url) : 'removed')} (removed)</span>`;
+    const note = [e.raw.note, e.raw.link_check, dead && dead.note].filter(Boolean).join(' · ');
+    return `<tr><td>${st}</td><td>${srcPill(e.raw.tag) || '<span class="muted">—</span>'}</td>
+      <td>${cell}</td><td>${hl(note)}</td></tr>`; }).join('')}</tbody></table></div>`;
 }
 
 const PAGE = 40;
@@ -430,8 +441,8 @@ function viewOverview() {
     </div>
     <div class="status">
       <a class="stat ${N_VERIFIED === ALL_URLS.length ? 'ok' : 'bad'}" href="#unverified"><span class="eyebrow">Link check</span><b>${N_VERIFIED} / ${ALL_URLS.length}</b><span class="muted">distinct URLs verified</span></a>
-      <a class="stat warn" href="#conflicts"><span class="eyebrow">Source conflicts</span><b>${nConf}</b><span class="muted">ISACA vs third party, unresolved</span></a>
-      <a class="stat" href="#unverified"><span class="eyebrow">Unverified items</span><b>${nUnv}</b><span class="muted">open follow-ups</span></a>
+      <a class="stat warn" href="#conflicts"><span class="eyebrow">Source conflicts</span><b>${nConf}</b><span class="muted">ISACA vs third party, listed</span></a>
+      <a class="stat" href="#unverified"><span class="eyebrow">Unverified items</span><b>${nUnv}</b><span class="muted">follow-ups (some marked resolved)</span></a>
     </div>
     ${m.method ? `<details class="callout"><summary>How this wiki was researched (read before relying on it)</summary><p>${esc(m.method)}</p></details>` : ''}
     ${weightsBlock()}
@@ -456,9 +467,9 @@ function viewDomain(id) {
       ${d.summary ? `<p class="summary">${hl(d.summary)}</p>` : ''}
       <div class="jump">${conf.length ? `<a href="#${id}" data-jump="${id}-conflict">Conflicts (${conf.length})</a>` : ''}${kindsHere.map(k => `<a href="#${id}" data-jump="${id}-${k}">${KINDS[k].label} (${rest.filter(e => e.kind === k).length})</a>`).join('')}</div>
     </div>
-    ${conf.length ? `<section id="${id}-conflict"><div class="sec-h"><h2>Source conflicts that mention ${id}</h2><span class="n">${conf.length} · unresolved</span></div>${renderList('conflict', conf, ctx, id + 'conflict')}</section>` : ''}
+    ${conf.length ? `<section id="${id}-conflict"><div class="sec-h"><h2>Source conflicts that mention ${id}</h2><span class="n">${conf.length}</span></div>${renderList('conflict', conf, ctx, id + 'conflict')}</section>` : ''}
     ${groupSections(rest, ctx, id)}
-    ${noVideos && !filtersActive() ? `<section><div class="sec-h"><h2>YouTube explainers</h2><span class="n">0</span></div><div class="empty">No video is listed because none could be opened and checked. Candidates are under <a href="#unverified">Unverified items</a>.</div></section>` : ''}
+    ${noVideos && !filtersActive() ? `<section><div class="sec-h"><h2>YouTube explainers</h2><span class="n">0</span></div><div class="empty">No video is listed for this domain yet. Remaining candidates are under <a href="#unverified">Unverified items</a>.</div></section>` : ''}
     ${!list.length ? '<div class="empty">Nothing in this domain matches the current search and filters.</div>' : ''}`;
 }
 function viewKind(view) {
