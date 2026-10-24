@@ -13,5 +13,7 @@ Defaults: input `/mnt/project-files/cisa-wiki/CISA exam domains wiki.json`, outp
 - Link badges read each record's `verified` field and `meta.link_check.url_status`
   (`ok`, `partial`, `blocked`, `unreadable`, `dead`, each with a note shown as a tooltip).
   A URL counts as verified once any record has `verified: true` or its status is `ok`/`partial`.
-- Records show their `link_check` note and any `dead_links` removed during a link check.
-- Source conflicts are shown as ISACA vs third-party positions and never merged.
+- Records show their `flag`, `link_check` note and any `dead_links` (dead or blocked links removed).
+- Source conflicts are shown as ISACA vs third-party positions and never merged. If a conflict has a
+  `resolution` (`status`, `answer_to_study`, `deciding_source`, `reason`, `checked`), it is shown below
+  both positions: green when resolved, amber when unresolved.
