@@ -133,6 +133,9 @@ ul.dist { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column;
 .pos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .pos > div { border: 1px solid hsl(var(--border)); border-radius: var(--r); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; font-size: .9rem; min-width: 0; }
 .pos .isa { border-color: hsl(var(--primary) / .5); }
+.res { border: 1px solid hsl(var(--ok) / .6); background: hsl(var(--ok) / .07); border-radius: var(--r); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; font-size: .9rem; min-width: 0; }
+.res.open { border-color: hsl(var(--warn) / .6); background: hsl(var(--warn) / .07); }
+.res p { margin: 0; }
 .tbl-wrap { overflow-x: auto; }
 table.src { width: 100%; border-collapse: collapse; font-size: .82rem; }
 table.src td, table.src th { text-align: left; padding: 6px 8px; border-bottom: 1px solid hsl(var(--border)); vertical-align: top; }
@@ -276,7 +279,7 @@ for (const d of DOMAINS) {
 }
 (W.cross_domain_themes || []).forEach(t => add('theme', null, t, [t.source_url, ...asList(t.additional_source_urls)], { domains: asList(t.domains).filter(x => DMAP[x]) }));
 (W.glossary || []).forEach(g => add('glossary', null, g, [g.source_url]));
-(W.source_conflicts || []).forEach((c, i) => add('conflict', null, c, [c.isaca_source, c.third_party_source], {
+(W.source_conflicts || []).forEach((c, i) => add('conflict', null, c, [c.isaca_source, c.third_party_source, ...asList((c.resolution || {}).deciding_source)], {
   idx: i, domains: mentionedDomains(c.topic, c.isaca_position, c.third_party_position, c.notes),
 }));
 (W.unverified_items || []).forEach(u => add('unverified', DMAP[u.domain] ? u.domain : null, u, [u.url]));
@@ -351,7 +354,12 @@ function domPills(e) {
 }
 function kindPill(e, show) { return show ? `<span class="pill kind">${KINDS[e.kind].one}</span>` : ''; }
 function lcRows(o) {
-  return [['Link check', o.link_check], ['Dead links removed', asList(o.dead_links).map(d => `${d.url} (${d.field}): ${d.note}`)]];
+  return [['Flag', o.flag], ['Link check', o.link_check], ['Links removed', asList(o.dead_links).map(d => `${d.url} (${d.field}): ${d.note}`)]];
+}
+function resBlock(r) {
+  if (!r) return '';
+  const ok = r.status === 'resolved';
+  return `<div class="res ${ok ? '' : 'open'}"><span class="eyebrow">${ok ? 'Resolution: study this' : 'Unresolved: best current answer'}</span><p><b>${hl(r.answer_to_study)}</b></p><p class="muted">${hl(r.reason)}${r.checked ? ` (checked ${esc(r.checked)})` : ''}</p>${asList(r.deciding_source).length ? links(asList(r.deciding_source)) : '<div class="link"><span class="pill src">no deciding source</span></div>'}</div>`;
 }
 function kv(pairs) {
   const rows = pairs.filter(([, v]) => v != null && v !== '' && !(Array.isArray(v) && !v.length));
@@ -383,11 +391,12 @@ const R = {
     <div class="ehead"><h3>${hl(g.term)}</h3>${kindPill(e, ctx.mixed)}${basisPill(g.basis)}</div>
     ${kv([['Definition', g.definition], ['Note', g.note], ...lcRows(g)])}${links(e.urls)}</article>`; },
   conflict: (e, ctx) => { const c = e.raw; return `<article class="entry conflict" id="conflict-${e.idx}">
-    <div class="ehead"><h3>${hl(c.topic)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}<span class="pill cand">${/^Resolved/.test(c.notes || '') ? 'checked against primary source' : 'listed, not resolved'}</span></div>
+    <div class="ehead"><h3>${hl(c.topic)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}${c.resolution ? (c.resolution.status === 'resolved' ? '<span class="pill v-yes">resolved</span>' : '<span class="pill cand">unresolved</span>') : '<span class="pill cand">listed, not resolved</span>'}</div>
     <div class="pos">
       <div class="isa"><span class="eyebrow">ISACA position</span><p>${hl(c.isaca_position) || '<span class="muted">Not stated</span>'}</p>${links(extractUrls(c.isaca_source), 'No ISACA source URL.')}</div>
       <div><span class="eyebrow">Third-party position</span><p>${hl(c.third_party_position) || '<span class="muted">Not stated</span>'}</p>${links(extractUrls(c.third_party_source), 'No third-party source URL.')}</div>
     </div>
+    ${resBlock(c.resolution)}
     ${c.notes ? `<p class="muted" style="font-size:.88rem">${hl(c.notes)}</p>` : ''}${kv(lcRows(c))}</article>`; },
   unverified: (e, ctx) => { const u = e.raw; const isVid = !!u.video_id; return `<article class="entry unv">
     <div class="ehead"><h3>${hl(isVid ? (u.title_as_seen || u.item) : u.item)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${isVid ? '<span class="pill cand">video candidate</span>' : ''}${u.status === 'resolved' ? '<span class="pill v-yes">resolved</span>' : ''}</div>
@@ -434,6 +443,7 @@ function counts(id) {
 function viewOverview() {
   const m = W.meta || {}, x = m.exam || {};
   const nConf = (W.source_conflicts || []).length, nUnv = (W.unverified_items || []).length;
+  const nRes = (W.source_conflicts || []).filter(c => (c.resolution || {}).status === 'resolved').length;
   return `<div class="dhead" style="--dc:var(--primary)">
       <span class="eyebrow">${esc(m.job_practice_version || '')}</span>
       <h1>CISA exam domains wiki</h1>
@@ -441,7 +451,7 @@ function viewOverview() {
     </div>
     <div class="status">
       <a class="stat ${N_VERIFIED === ALL_URLS.length ? 'ok' : 'bad'}" href="#unverified"><span class="eyebrow">Link check</span><b>${N_VERIFIED} / ${ALL_URLS.length}</b><span class="muted">distinct URLs verified</span></a>
-      <a class="stat warn" href="#conflicts"><span class="eyebrow">Source conflicts</span><b>${nConf}</b><span class="muted">ISACA vs third party, listed</span></a>
+      <a class="stat warn" href="#conflicts"><span class="eyebrow">Source conflicts</span><b>${nConf}</b><span class="muted">${nRes} resolved, ${nConf - nRes} unresolved</span></a>
       <a class="stat" href="#unverified"><span class="eyebrow">Unverified items</span><b>${nUnv}</b><span class="muted">follow-ups (some marked resolved)</span></a>
     </div>
     ${m.method ? `<details class="callout"><summary>How this wiki was researched (read before relying on it)</summary><p>${esc(m.method)}</p></details>` : ''}
@@ -449,8 +459,8 @@ function viewOverview() {
     <section><div class="sec-h"><h2>Domains</h2></div><div class="dgrid">${DOMAINS.map(d => { const c = counts(d.id); return `<a class="dcard" data-d="${d.id}" href="#${d.id}">
       <span class="eyebrow">${d.id} · ${d.weight_percent}%</span><h3 style="font-family:var(--f-display);font-size:1.05rem">${esc(d.name)}</h3>
       <div class="counts">${['subtopic', 'trap', 'example', 'resource', 'source'].map(k => `<span>${c[k] || 0} ${KINDS[k].label.toLowerCase()}</span>`).join('')}</div></a>`; }).join('')}</div></section>
-    <section><div class="sec-h"><h2>Source conflicts</h2><span class="n">${nConf} listed, none resolved</span></div>
-      <p class="muted" style="font-size:.88rem">Where ISACA and third-party sources disagree, both positions are kept. ISACA (isaca.org) is authoritative for exam facts.</p>
+    <section><div class="sec-h"><h2>Source conflicts</h2><span class="n">${nConf} listed, ${nRes} resolved</span></div>
+      <p class="muted" style="font-size:.88rem">Where sources disagree, both positions are kept and each conflict shows its resolution with the deciding source. ISACA (isaca.org) decides exam facts; primary sources decide incident and standards facts.</p>
       <div class="jump">${(W.source_conflicts || []).map((c, i) => `<a href="#conflicts" data-conf="${i}">${esc(c.topic)}</a>`).join('')}</div></section>`;
 }
 function viewDomain(id) {
@@ -477,7 +487,7 @@ function viewKind(view) {
   let list = E.filter(e => inScope(e) && passesFilters(e, true));
   if (k === 'glossary') list = list.slice().sort((a, b) => a.raw.term.localeCompare(b.raw.term));
   const intro = {
-    conflicts: 'ISACA and third-party sources disagree on these points. Both positions are listed and neither is resolved here. ISACA (isaca.org) is authoritative for exam facts.',
+    conflicts: 'Sources disagree on these points. Both positions stay listed; the green box gives the answer to study, the deciding source and the reason. ISACA (isaca.org) decides exam facts; primary sources (regulators, government reports, standards bodies, company releases) decide the rest. Amber boxes could not be decided from reachable sources.',
     themes: 'Themes that cut across domains.',
     glossary: 'Terms with definitions. Basis shows whether the text comes from an ISACA glossary snippet or is an unverified paraphrase.',
     unverified: 'Follow-ups that still need a page to be opened and checked, including YouTube candidates that are not listed as explainers yet.',
