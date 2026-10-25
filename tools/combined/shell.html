@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CISA Study Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Shell: one bar on top, planner and wiki in two same-page frames below. Frames talk through postMessage.
+   Palette and faces follow the planner and the wiki. */
+:root {
+  --bg: 210 22% 97%; --card: 0 0% 100%; --fg: 215 32% 13%; --muted: 210 20% 93%;
+  --muted-fg: 215 14% 40%; --border: 212 18% 84%; --primary: 192 72% 27%;
+  --d1: 192 72% 30%; --d2: 228 55% 48%; --d3: 88 40% 36%; --d4: 34 85% 44%; --d5: 8 62% 46%; --mock: 215 16% 42%;
+  --f-display: "Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --bar-h: 52px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: 215 30% 8%; --card: 215 26% 11%; --fg: 210 22% 91%; --muted: 215 22% 16%;
+  --muted-fg: 212 14% 64%; --border: 215 18% 23%; --primary: 186 58% 56%;
+  --d1: 186 58% 52%; --d2: 226 70% 70%; --d3: 88 40% 56%; --d4: 36 85% 58%; --d5: 8 70% 64%; --mock: 212 14% 66%;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: 215 30% 8%; --card: 215 26% 11%; --fg: 210 22% 91%; --muted: 215 22% 16%;
+  --muted-fg: 212 14% 64%; --border: 215 18% 23%; --primary: 186 58% 56%;
+  --d1: 186 58% 52%; --d2: 226 70% 70%; --d3: 88 40% 56%; --d4: 36 85% 58%; --d5: 8 70% 64%; --mock: 212 14% 66%;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: hsl(var(--bg)); color: hsl(var(--fg)); font: 14px/1.4 var(--f-body); display: flex; flex-direction: column; overflow: hidden; }
+.bar { flex: none; min-height: var(--bar-h); padding-top: env(safe-area-inset-top, 0px); background: hsl(var(--card)); border-bottom: 1px solid hsl(var(--border)); }
+.bar-in { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); }
+.brand { font: 700 1.05rem var(--f-display); white-space: nowrap; }
+.seg { display: inline-flex; border: 1px solid hsl(var(--border)); border-radius: .25rem; overflow: hidden; }
+.seg button { font: 500 .85rem var(--f-body); padding: 6px 14px; border: 0; background: transparent; color: hsl(var(--muted-fg)); cursor: pointer; }
+.seg button + button { border-left: 1px solid hsl(var(--border)); }
+.seg button[aria-pressed="true"] { background: hsl(var(--primary)); color: hsl(var(--card)); }
+.seg button:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: -2px; }
+#both { display: none; }
+.next { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: .85rem; color: hsl(var(--muted-fg)); min-width: 0; margin-left: auto; }
+.next b { font: 500 .85rem var(--f-mono); color: hsl(var(--fg)); }
+.next button { display: inline-flex; align-items: center; gap: 5px; font: 500 .78rem var(--f-mono); padding: 3px 8px; border: 1px solid hsl(var(--border)); border-radius: .25rem; background: hsl(var(--card)); color: hsl(var(--fg)); cursor: pointer; }
+.next button:hover { background: hsl(var(--muted)); }
+.next i { width: 8px; height: 8px; border-radius: 1px; display: inline-block; }
+.panes { flex: 1; min-height: 0; display: flex; }
+.panes iframe { border: 0; flex: 1; min-width: 0; height: 100%; display: none; background: hsl(var(--bg)); }
+body[data-view="planner"] #f-planner, body[data-view="wiki"] #f-wiki { display: block; }
+@media (min-width: 1100px) {
+  #both { display: inline-block; }
+  body[data-view="both"] #f-planner, body[data-view="both"] #f-wiki { display: block; }
+  body[data-view="both"] #f-planner { flex: 1.15; border-right: 1px solid hsl(var(--border)); }
+}
+@media (max-width: 640px) { .next { margin-left: 0; flex-basis: 100%; } }
+</style>
+</head>
+<body data-view="planner">
+<header class="bar">
+  <div class="bar-in">
+    <span class="brand">CISA Study Hub</span>
+    <div class="seg" role="group" aria-label="View">
+      <button type="button" data-view="planner" aria-pressed="true">Planner</button>
+      <button type="button" data-view="wiki" aria-pressed="false">Wiki</button>
+      <button type="button" data-view="both" id="both" aria-pressed="false">Side by side</button>
+    </div>
+    <div class="next" id="next" aria-live="polite"></div>
+  </div>
+</header>
+<div class="panes">
+  <iframe id="f-planner" title="Study planner" srcdoc="__PLANNER_SRCDOC__"></iframe>
+  <iframe id="f-wiki" title="CISA wiki" srcdoc="__WIKI_SRCDOC__"></iframe>
+</div>
+<script>
+(() => {
+const F = { planner: document.getElementById('f-planner'), wiki: document.getElementById('f-wiki') };
+const VKEY = 'cisa-hub-view';
+const wide = matchMedia('(min-width: 1100px)');
+let view = 'planner', plan = null, ready = { planner: false, wiki: false }, pendingWiki = null;
+
+function send(frame, msg) { try { F[frame].contentWindow.postMessage({ cisa: 1, ...msg }, '*'); } catch {} }
+function setView(v, remember = true) {
+  if (v === 'both' && !wide.matches) v = 'planner';
+  view = v;
+  document.body.dataset.view = v;
+  document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+  if (remember) { try { localStorage.setItem(VKEY, v); } catch {} }
+}
+function show(frame) { if (view !== 'both') setView(frame); }
+
+const PH = { learn: 'learn', practice: 'practice', review: 'review', mock: 'mock', mockreview: 'mock review' };
+const fmtQ = q => { const x = q / 4; return (Number.isInteger(x) ? x : x.toFixed(2).replace(/0$/, '')) + ' h'; };
+const fmtD = d => new Date(d + 'T00:00:00Z').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+function renderNext() {
+  const el = document.getElementById('next');
+  el.textContent = '';
+  if (!plan) return;
+  if (plan.error) { el.textContent = plan.error; return; }
+  const day = (plan.upcoming || [])[0];
+  if (!day) { el.textContent = 'No upcoming study day.'; return; }
+  el.append(day.date === plan.today ? 'Today' : 'Next', ' ');
+  const b = document.createElement('b'); b.textContent = fmtD(day.date); el.append(b);
+  const seen = new Set();
+  day.sessions.forEach(s => {
+    const key = (s.domain ?? 'm') + s.phase;
+    if (seen.has(key)) return; seen.add(key);
+    const q = day.sessions.filter(x => (x.domain ?? 'm') + x.phase === key).reduce((a, x) => a + x.q, 0);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.title = 'Open the matching wiki section';
+    const dot = document.createElement('i');
+    dot.style.background = `hsl(var(--${s.domain == null ? 'mock' : 'd' + s.domain}))`;
+    btn.append(dot, `${s.domain == null ? 'Mock' : 'D' + s.domain} ${PH[s.phase] || s.phase} ${fmtQ(q)} ↗`);
+    btn.addEventListener('click', () => openWiki({ view: s.domain == null ? 'facts' : 'D' + s.domain }));
+    el.append(btn);
+  });
+}
+
+function openWiki(msg) {
+  show('wiki');
+  if (ready.wiki) send('wiki', { type: 'open', ...msg });
+  else pendingWiki = msg;
+}
+
+window.addEventListener('message', ev => {
+  const m = ev.data;
+  if (!m || m.cisa !== 1) return;
+  const from = ev.source === F.planner.contentWindow ? 'planner' : ev.source === F.wiki.contentWindow ? 'wiki' : null;
+  if (!from) return;
+  if (m.type === 'ready') {
+    ready[from] = true;
+    if (from === 'wiki') {
+      if (plan) send('wiki', { type: 'plan', summary: plan });
+      if (pendingWiki) { send('wiki', { type: 'open', ...pendingWiki }); pendingWiki = null; }
+    } else send('planner', { type: 'hello' });
+  }
+  if (from === 'planner' && m.type === 'plan') { plan = m.summary; renderNext(); if (ready.wiki) send('wiki', { type: 'plan', summary: plan }); }
+  if (from === 'planner' && m.type === 'open-wiki' && typeof m.view === 'string') openWiki({ view: m.view, subtopics: m.subtopics });
+  if (from === 'wiki' && m.type === 'show-in-planner') { show('planner'); send('planner', { type: 'show-domain', domain: m.domain, calendar: !!m.calendar }); }
+});
+
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+wide.addEventListener('change', () => { if (!wide.matches && view === 'both') setView('planner', false); });
+let saved = null; try { saved = localStorage.getItem(VKEY); } catch {}
+setView(['planner', 'wiki', 'both'].includes(saved) ? saved : 'planner', false);
+})();
+</script>
+</body>
+</html>
