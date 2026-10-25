@@ -1,0 +1,49 @@
+{
+  "_note": "Planner key topic -> wiki subtopics ([domain, subtopic name]). Hand-made; build_combined.py fails if a planner topic or a wiki subtopic name is missing.",
+  "1": {
+    "ISACA standards vs guidelines vs procedures": [["D1", "IS Audit Standards, Guidelines, Functions and Codes of Ethics"]],
+    "Risk-based audit planning": [["D1", "Risk-based Audit Planning"]],
+    "Audit risk model (inherent, control, detection)": [["D1", "Risk-based Audit Planning"], ["D1", "Types of Controls and Considerations"]],
+    "Evidence types and sufficiency": [["D1", "Audit Evidence Collection Techniques"]],
+    "Sampling (statistical vs judgmental)": [["D1", "Audit Testing and Sampling Methodology"]],
+    "Working papers, reporting, follow-up": [["D1", "Reporting and Communication Techniques"], ["D1", "Audit Project Management"]],
+    "CSA and continuous auditing": [["D1", "Types of Controls and Considerations"], ["D1", "Audit Data Analytics"]]
+  },
+  "2": {
+    "Governance vs management": [["D2", "Organizational Structure, IT Governance and IT Strategy"]],
+    "COBIT 2019": [["D2", "Organizational Structure, IT Governance and IT Strategy"]],
+    "IT strategy and steering committees": [["D2", "Organizational Structure, IT Governance and IT Strategy"]],
+    "Policy hierarchy": [["D2", "IT Policies, Standards, Procedures and Practices"]],
+    "KPIs and performance measurement": [["D2", "IT Performance Monitoring and Reporting"]],
+    "Enterprise risk management": [["D2", "Enterprise Risk Management"]],
+    "Vendor and third-party risk": [["D2", "IT Vendor Management"]]
+  },
+  "3": {
+    "Business case and feasibility": [["D3", "Business Case and Feasibility Analysis"]],
+    "Project governance and controls": [["D3", "Project Governance and Management"], ["D3", "Control Identification and Design"]],
+    "SDLC phases and their controls": [["D3", "System Development Methodologies"], ["D3", "Control Identification and Design"]],
+    "Testing types": [["D3", "System Readiness and Implementation Testing"]],
+    "Change and configuration management": [["D3", "Implementation Configuration and Release Management"], ["D4", "IT Change, Configuration and Patch Management"]],
+    "Migration and cutover": [["D3", "System Migration, Infrastructure Deployment and Data Conversion"]],
+    "Post-implementation review": [["D3", "Post-implementation Review"]]
+  },
+  "4": {
+    "IT operations controls": [["D4", "Job Scheduling and Production Process Automation"], ["D4", "Operational Log Management"], ["D4", "IT Service Level Management"]],
+    "Incident and problem management": [["D4", "Problem and Incident Management"]],
+    "Asset and configuration management": [["D4", "IT Asset Management"], ["D4", "IT Change, Configuration and Patch Management"]],
+    "Business impact analysis": [["D4", "Business Impact Analysis"]],
+    "BCP vs DRP": [["D4", "Business Continuity Plan"], ["D4", "Disaster Recovery Plans"]],
+    "BCP/DRP test types": [["D4", "Business Continuity Plan"], ["D4", "System and Operational Resilience"]],
+    "Backup strategies": [["D4", "Data Backup, Storage and Restoration"]],
+    "MTD, RTO, RPO": [["D4", "Business Impact Analysis"], ["D4", "Disaster Recovery Plans"]]
+  },
+  "5": {
+    "IAM and access control models": [["D5", "Identity and Access Management"]],
+    "Network security": [["D5", "Network and Endpoint Security"]],
+    "Cryptography and PKI": [["D5", "Data Encryption"], ["D5", "Public Key Infrastructure"]],
+    "Data classification and privacy": [["D2", "Data Governance and Classification"], ["D2", "Privacy Program and Principles"], ["D5", "Data Loss Prevention"]],
+    "Logging, SIEM, monitoring": [["D5", "Security Monitoring Logs, Tools, and Techniques"]],
+    "Vulnerability management": [["D5", "Security Testing Tools and Techniques"]],
+    "Security incident response": [["D5", "Security Incident Response Management"]]
+  }
+}
