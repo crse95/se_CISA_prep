@@ -111,6 +111,11 @@ section { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .entry { border: 1px solid hsl(var(--border)); border-radius: var(--r); background: hsl(var(--card)); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .entry.fact { border-left: 4px solid hsl(var(--ok)); }
 .entry.unv { border-left: 4px solid hsl(var(--muted-fg)); }
+.entry.video { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 12px 16px; }
+.entry.video .thumb { flex: 0 0 240px; max-width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--r); background: hsl(var(--muted)); }
+.entry.video .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.entry.video .vbody { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.vdesc { font-size: .9rem; white-space: pre-line; overflow-wrap: anywhere; }
 .ehead { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
 .ehead h3 { flex: 1 1 260px; min-width: 0; }
 .kv { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 4px 12px; font-size: .9rem; }
@@ -183,6 +188,7 @@ footer { font-size: .78rem; color: hsl(var(--muted-fg)); border-top: 1px solid h
 (() => {
 const W = JSON.parse(document.getElementById('wiki-data').textContent);
 const BUILD = JSON.parse(document.getElementById('build-info').textContent);
+const THUMBS = (BUILD && BUILD.thumbs) || {};
 const DOMAINS = W.domains || [];
 const DMAP = Object.fromEntries(DOMAINS.map(d => [d.id, d]));
 const DIDS = DOMAINS.map(d => d.id);
@@ -378,9 +384,13 @@ const R = {
   resource: (e, ctx) => { const r = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(r.title)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${srcPill(r.source_type)}</div>
     ${kv([['Publisher', r.publisher], ['Type', r.type], ['Relevance', r.relevance], ['Note', r.note], ...lcRows(r)])}${links(e.urls)}</article>`; },
-  video: (e, ctx) => { const v = e.raw; return `<article class="entry">
-    <div class="ehead"><h3>${hl(v.title || v.title_as_seen || v.url)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}</div>
-    ${kv(Object.entries(v).filter(([k]) => !['title', 'url', 'verified'].includes(k)).map(([k, val]) => [k.replace(/_/g, ' '), typeof val === 'object' ? JSON.stringify(val) : val]))}${links(e.urls)}</article>`; },
+  video: (e, ctx) => { const v = e.raw; const id = v.video_id || ((v.url || '').match(/[?&]v=([\w-]{11})/) || [])[1];
+    const thumb = (THUMBS[id] || (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : ''));
+    return `<article class="entry video">
+    ${thumb ? `<a class="thumb" href="${esc(v.url)}" target="_blank" rel="noopener noreferrer"><img src="${esc(thumb)}" alt="" loading="lazy" onerror="this.parentNode.remove()"></a>` : ''}
+    <div class="vbody"><div class="ehead"><h3>${hl(v.title || v.title_as_seen || v.url)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}</div>
+    ${v.channel ? `<p class="muted">${hl(v.channel)}</p>` : ''}${v.description ? `<p class="vdesc">${hl(v.description)}</p>` : ''}
+    <div class="link"><a href="${esc(v.url)}" target="_blank" rel="noopener noreferrer">${TOKEN_RE ? hl(shortUrl(v.url)) : esc(shortUrl(v.url))}</a></div></div></article>`; },
   theme: (e, ctx) => { const t = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(t.theme)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}${basisPill(t.basis)}</div>
     ${kv([['Description', t.description], ...lcRows(t)])}${links(e.urls)}</article>`; },
