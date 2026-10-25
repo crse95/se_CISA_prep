@@ -198,6 +198,9 @@ const KINDS = {
   subtopic:   { label: 'Subtopics',            one: 'Subtopic' },
   trap:       { label: 'Exam traps',           one: 'Exam trap' },
   example:    { label: 'Real-world incidents', one: 'Incident' },
+  booktip:    { label: 'Book exam tips',       one: 'Book tip' },
+  essential:  { label: 'Book exam essentials', one: 'Exam essential' },
+  question:   { label: 'Book review questions', one: 'Question' },
   resource:   { label: 'Resources',            one: 'Resource' },
   video:      { label: 'YouTube explainers',   one: 'Video' },
   source:     { label: 'Sources',              one: 'Source' },
@@ -210,8 +213,9 @@ const KIND_ORDER = Object.keys(KINDS);
 const BASIS_LABEL = {
   sourced: 'sourced', general_knowledge: 'general knowledge',
   unverified_paraphrase: 'unverified paraphrase', isaca_glossary_snippet: 'ISACA glossary snippet',
+  book: 'book (Sybex)',
 };
-const SRC_LABEL = { isaca: 'ISACA', 'standards body': 'standards body', vendor: 'vendor', community: 'community', media: 'media', youtube: 'YouTube' };
+const SRC_LABEL = { isaca: 'ISACA', 'standards body': 'standards body', vendor: 'vendor', community: 'community', media: 'media', youtube: 'YouTube', book: 'book' };
 
 /* ---------- helpers ---------- */
 const esc = s => s == null ? '' : String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -273,12 +277,15 @@ for (const d of DOMAINS) {
   (d.subtopics || []).forEach(s => add('subtopic', d.id, s, s.source_urls));
   (d.exam_traps || []).forEach(t => add('trap', d.id, t, [t.source_url, ...asList(t.source_urls)]));
   (d.real_world_examples || []).forEach(x => add('example', d.id, x, [x.source_url, ...asList(x.additional_source_urls)]));
+  (d.book_exam_tips || []).forEach(x => add('booktip', d.id, x, []));
+  (d.book_exam_essentials || []).forEach(x => add('essential', d.id, x, []));
+  (d.book_review_questions || []).forEach(x => add('question', d.id, x, []));
   (d.third_party_resources || []).forEach(r => add('resource', d.id, r, [r.url]));
   (d.youtube_explainers || []).forEach(v => add('video', d.id, v, [v.url]));
   (d.sources || []).forEach(s => add('source', d.id, s, [s.url]));
 }
 (W.cross_domain_themes || []).forEach(t => add('theme', null, t, [t.source_url, ...asList(t.additional_source_urls)], { domains: asList(t.domains).filter(x => DMAP[x]) }));
-(W.glossary || []).forEach(g => add('glossary', null, g, [g.source_url]));
+(W.glossary || []).forEach(g => add('glossary', DMAP[g.domain] ? g.domain : null, g, [g.source_url]));
 (W.source_conflicts || []).forEach((c, i) => add('conflict', null, c, [c.isaca_source, c.third_party_source, ...asList((c.resolution || {}).deciding_source)], {
   idx: i, domains: mentionedDomains(c.topic, c.isaca_position, c.third_party_position, c.notes),
 }));
@@ -356,6 +363,13 @@ function kindPill(e, show) { return show ? `<span class="pill kind">${KINDS[e.ki
 function lcRows(o) {
   return [['Flag', o.flag], ['Link check', o.link_check], ['Links removed', asList(o.dead_links).map(d => `${d.url} (${d.field}): ${d.note}`)]];
 }
+function bookCite(r) {
+  if (!r) return '';
+  return `<div class="link"><span class="pill src">book</span> <span class="muted mono" style="font-size:.8rem">${hl(typeof r === 'string' ? r : r.cite || [r.chapter, r.section].filter(Boolean).join(', '))}</span></div>`;
+}
+function bookRefs(list) {
+  return asList(list).map(r => `${r.chapter.replace(/^Ch (\d+) .*/, 'Ch $1')} · ${r.section} (L${r.line})`);
+}
 function resBlock(r) {
   if (!r) return '';
   const ok = r.status === 'resolved';
@@ -370,7 +384,7 @@ function kv(pairs) {
 const R = {
   subtopic: (e, ctx) => { const s = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${s.part ? `<span class="mono muted">${esc(s.part)}.</span> ` : ''}${hl(s.name)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${basisPill(s.basis)}</div>
-    ${kv([['Definition', s.definition], ['Why the auditor cares', s.why_auditor_cares], ['Exam distinctions', asList(s.exam_distinctions)], ['Note', s.note], ['Name note', s.name_note], ...lcRows(s)])}
+    ${kv([['Definition', s.definition], ['Why the auditor cares', s.why_auditor_cares], ['Exam distinctions', asList(s.exam_distinctions)], ['Note', s.note], ['Name note', s.name_note], ['Book sections', bookRefs(s.book_refs)], ...lcRows(s)])}
     ${links(e.urls, 'No source URL. Written from general CISA body of knowledge.')}</article>`; },
   trap: (e, ctx) => { const t = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(t.confused_concepts)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${basisPill(t.basis)}</div>
@@ -389,19 +403,30 @@ const R = {
     ${kv([['Description', t.description], ...lcRows(t)])}${links(e.urls)}</article>`; },
   glossary: (e, ctx) => { const g = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(g.term)}</h3>${kindPill(e, ctx.mixed)}${basisPill(g.basis)}</div>
-    ${kv([['Definition', g.definition], ['Note', g.note], ...lcRows(g)])}${links(e.urls)}</article>`; },
+    ${kv([['Definition', g.definition], ['Book definition', g.book_definition], ['Note', g.note], ...lcRows(g)])}${g.basis === 'book' && !e.urls.length ? '' : links(e.urls)}${bookCite(g.book_ref)}</article>`; },
+  booktip: (e, ctx) => { const t = e.raw; return `<article class="entry">
+    <div class="ehead"><h3>${hl(t.book_ref.section || 'Exam tip')}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${basisPill(t.basis)}</div>
+    ${kv([['Tip', t.tip], ['Maps to', t.maps_to_subtopic]])}${bookCite(t.book_ref)}</article>`; },
+  essential: (e, ctx) => { const t = e.raw; return `<article class="entry">
+    <div class="ehead"><h3>${hl(t.title)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${basisPill(t.basis)}</div>
+    ${kv([['Essential', t.text], ['Maps to', t.maps_to_subtopic]])}${bookCite(t.book_ref)}</article>`; },
+  question: (e, ctx) => { const q = e.raw; const opts = Object.entries(q.options || {}); return `<article class="entry">
+    <div class="ehead"><h3><span class="mono muted">${esc(q.set)}.</span> ${hl(q.question)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${basisPill(q.basis)}</div>
+    ${opts.length ? `<ol class="dist" style="list-style:none;padding-left:0;margin:0">${opts.map(([k, v]) => `<li><b class="mono">${esc(k)}.</b> ${hl(v)}</li>`).join('')}</ol>` : ''}
+    <details><summary class="muted" style="cursor:pointer">Answer${q.maps_to_subtopic ? ' · maps to ' + esc(q.maps_to_subtopic) : ''}</summary>${kv([['Answer', q.answer || 'not parsed'], ['Explanation', q.explanation], ['Answer source', q.answer_ref]])}</details>
+    ${bookCite(q.book_ref)}</article>`; },
   conflict: (e, ctx) => { const c = e.raw; return `<article class="entry conflict" id="conflict-${e.idx}">
     <div class="ehead"><h3>${hl(c.topic)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}${c.resolution ? (c.resolution.status === 'resolved' ? '<span class="pill v-yes">resolved</span>' : '<span class="pill cand">unresolved</span>') : '<span class="pill cand">listed, not resolved</span>'}</div>
     <div class="pos">
       <div class="isa"><span class="eyebrow">ISACA position</span><p>${hl(c.isaca_position) || '<span class="muted">Not stated</span>'}</p>${links(extractUrls(c.isaca_source), 'No ISACA source URL.')}</div>
-      <div><span class="eyebrow">Third-party position</span><p>${hl(c.third_party_position) || '<span class="muted">Not stated</span>'}</p>${links(extractUrls(c.third_party_source), 'No third-party source URL.')}</div>
+      <div><span class="eyebrow">Third-party position</span><p>${hl(c.third_party_position) || '<span class="muted">Not stated</span>'}</p>${c.third_party_book_ref ? asList(c.third_party_book_ref).map(bookCite).join('') : links(extractUrls(c.third_party_source), 'No third-party source URL.')}</div>
     </div>
     ${resBlock(c.resolution)}
     ${c.notes ? `<p class="muted" style="font-size:.88rem">${hl(c.notes)}</p>` : ''}${kv(lcRows(c))}</article>`; },
   unverified: (e, ctx) => { const u = e.raw; const isVid = !!u.video_id; return `<article class="entry unv">
     <div class="ehead"><h3>${hl(isVid ? (u.title_as_seen || u.item) : u.item)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${isVid ? '<span class="pill cand">video candidate</span>' : ''}${u.status === 'resolved' ? '<span class="pill v-yes">resolved</span>' : ''}</div>
     ${kv([isVid ? ['Channel', u.channel] : ['', null], isVid ? ['Title (oEmbed)', u.title_confirmed] : ['', null], ['Reason', u.reason], ['Needed action', u.needed_action], ['Attempt', u.attempt]])}
-    ${u.url ? links(e.urls) : ''}</article>`; },
+    ${u.url ? links(e.urls) : ''}${bookCite(u.book_ref)}</article>`; },
 };
 
 function sourceTable(list) {
@@ -455,10 +480,11 @@ function viewOverview() {
       <a class="stat" href="#unverified"><span class="eyebrow">Unverified items</span><b>${nUnv}</b><span class="muted">follow-ups (some marked resolved)</span></a>
     </div>
     ${m.method ? `<details class="callout"><summary>How this wiki was researched (read before relying on it)</summary><p>${esc(m.method)}</p></details>` : ''}
+    ${m.book_enrichment ? `<details class="callout"><summary>Sybex study guide content (third-party book, added ${esc(m.book_enrichment.date)})</summary><p>${esc(m.book_enrichment.method)}</p><p>${esc(m.book_enrichment.rules)}</p><p class="mono" style="font-size:.8rem">${esc(Object.entries(m.book_enrichment.counts || {}).map(([k, v]) => k.replace(/_/g, ' ') + ': ' + v).join(' · '))}</p></details>` : ''}
     ${weightsBlock()}
     <section><div class="sec-h"><h2>Domains</h2></div><div class="dgrid">${DOMAINS.map(d => { const c = counts(d.id); return `<a class="dcard" data-d="${d.id}" href="#${d.id}">
       <span class="eyebrow">${d.id} · ${d.weight_percent}%</span><h3 style="font-family:var(--f-display);font-size:1.05rem">${esc(d.name)}</h3>
-      <div class="counts">${['subtopic', 'trap', 'example', 'resource', 'source'].map(k => `<span>${c[k] || 0} ${KINDS[k].label.toLowerCase()}</span>`).join('')}</div></a>`; }).join('')}</div></section>
+      <div class="counts">${['subtopic', 'trap', 'example', 'resource', 'source', 'question'].map(k => `<span>${c[k] || 0} ${KINDS[k].label.toLowerCase()}</span>`).join('')}</div></a>`; }).join('')}</div></section>
     <section><div class="sec-h"><h2>Source conflicts</h2><span class="n">${nConf} listed, ${nRes} resolved</span></div>
       <p class="muted" style="font-size:.88rem">Where sources disagree, both positions are kept and each conflict shows its resolution with the deciding source. ISACA (isaca.org) decides exam facts; primary sources decide incident and standards facts.</p>
       <div class="jump">${(W.source_conflicts || []).map((c, i) => `<a href="#conflicts" data-conf="${i}">${esc(c.topic)}</a>`).join('')}</div></section>`;
@@ -489,7 +515,7 @@ function viewKind(view) {
   const intro = {
     conflicts: 'Sources disagree on these points. Both positions stay listed; the green box gives the answer to study, the deciding source and the reason. ISACA (isaca.org) decides exam facts; primary sources (regulators, government reports, standards bodies, company releases) decide the rest. Amber boxes could not be decided from reachable sources.',
     themes: 'Themes that cut across domains.',
-    glossary: 'Terms with definitions. Basis shows whether the text comes from an ISACA glossary snippet or is an unverified paraphrase.',
+    glossary: 'Terms with definitions. Basis shows whether the text comes from an ISACA glossary snippet, an unverified paraphrase or the Sybex study guide (third-party book, cited by chapter and line). Book definitions are shown next to the wiki definition, not merged.',
     unverified: 'Follow-ups that still need a page to be opened and checked, including YouTube candidates that are not listed as explainers yet.',
   }[view];
   let body;

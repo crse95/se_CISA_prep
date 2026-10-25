@@ -17,3 +17,7 @@ Defaults: input `/mnt/project-files/cisa-wiki/CISA exam domains wiki.json`, outp
 - Source conflicts are shown as ISACA vs third-party positions and never merged. If a conflict has a
   `resolution` (`status`, `answer_to_study`, `deciding_source`, `reason`, `checked`), it is shown below
   both positions: green when resolved, amber when unresolved.
+- Book content (`basis: "book"`, from `tools/wiki_enrich/enrich_from_sybex.py`) is shown as its own entry
+  types per domain: book exam tips, Exam Essentials and review questions (answer in a collapsed block).
+  Subtopics show `book_refs`; glossary terms show `book_definition` next to the wiki definition. Book items
+  have no URL and show their `book_ref` citation (chapter, section, file, line) instead.
