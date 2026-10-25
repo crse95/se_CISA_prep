@@ -1,0 +1,504 @@
+{
+ "records": [
+  {
+   "kind": "exam_trap",
+   "domain": "D4",
+   "confused_concepts": "SDO vs RTO",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Service delivery objective (SDO): \"The level of services directly related to the business needs that must be reached during the alternate process mode until the normal situation is restored\"",
+   "note": "The ISACA glossary says SDO is a service level, not a time. That the acceptable RTO is defined in relation to the SDO is not in the ISACA glossary or the Sybex guide."
+  },
+  {
+   "kind": "glossary",
+   "term": "Maximum tolerable downtime (MTD)",
+   "status": "verified",
+   "source_type": "standards body",
+   "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-34r1.pdf",
+   "evidence": "NIST SP 800-34 Rev. 1, sec. 3.2.1: \"The MTD represents the total amount of time the system owner/authorizing official is willing to accept for a mission/business process outage or disruption\" and \"Because the RTO must ensure that the MTD is not exceeded, the RTO must normally be shorter than the MTD.\"",
+   "note": "NIST (government standards body). The ISACA glossary has no MTD entry. Its nearest term is \"Maximum tolerable outage (MTO)\": \"the maximum amount of time that an organization can tolerate the disruption ... before it causes significant harm\"."
+  },
+  {
+   "kind": "glossary",
+   "term": "Acceptable interruption window",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Acceptable interruption window (AIW): \"The maximum period of time that a system can be unavailable before compromising the achievement of the enterprise's business objectives\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Service delivery objective (SDO)",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Service delivery objective (SDO): \"The level of services directly related to the business needs that must be reached during the alternate process mode until the normal situation is restored\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Minimum business continuity objective (MBCO)",
+   "status": "partial",
+   "source_type": "standards body",
+   "url": "https://webstore.iec.ch/en/publication/107542",
+   "evidence": "ISO/IEC 27031:2025 abstract (IEC webstore, published 2025-05-16): \"This document serves the following business continuity objectives for ICT: minimum business continuity objective (MBCO), recovery point objective (RPO), recovery time objective (RTO)\"",
+   "note": "The abstract confirms that MBCO is targeted alongside RTO and RPO. The definition wording (\"minimum level of service acceptable during a disruption\") is from ISO 22300. The ISO pages (iso.org/standard/80975, ISO OBP) returned 403 to curl, Chromium and WebFetch on 2026-10-25. The term is not in the ISACA glossary."
+  },
+  {
+   "kind": "glossary",
+   "term": "Control risk",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Control risk: \"Risk that assets are lost/compromised or that financial statements are materially misstated, due to lack of, or ineffective, design and/or implementation of internal controls\"",
+   "note": "Same concept as the wiki, different wording."
+  },
+  {
+   "kind": "glossary",
+   "term": "Inherent risk",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Inherent risk: \"The level of risk or exposure that does not account for the actions management has taken or might take (e.g., implementing controls)\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Detection risk",
+   "status": "conflict",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Detection risk: \"Risk that assets are lost or compromised or financial statements are materially misstated due to failure of an enterprise's internal controls to detect errors or fraud in a timely manner\"",
+   "note": "Conflict, not resolved. The current ISACA glossary ties detection risk to the enterprise's internal controls. The wiki, the Sybex guide (p1:4555) and auditing standards define it as the risk that the auditor's procedures fail to detect a material error. Audit risk in the same glossary lists control, detection and inherent risk as its three components."
+  },
+  {
+   "kind": "glossary",
+   "term": "Materiality",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Materiality: \"An auditing concept that considers the importance of an item of information with regard to its impact or effect on the functioning of the entity being audited. Materiality is also an expression of the relative significance or importance of a particular matter in the context of the enterprise as a whole.\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Segregation of duties (SoD)",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Segregation/separation of duties (SoD): \"A basic internal control that prevents or detects errors and irregularities by assigning the responsibility for initiating and recording transactions and the custody of assets to separate individuals\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Least privilege",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Principle of least privilege (PoLP): \"individuals are only granted the least amount of system access necessary to perform their jobs\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Need to know",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Need-to-know: \"Principled approach to controlling what individuals can see. Employees can access only the data, systems and spaces necessary to do their job.\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Business impact analysis (BIA)",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Business impact analysis (BIA): \"The process of evaluating the criticality and sensitivity of information assets by determining the impact of losing the support of any resource ... establishes the escalation of a loss over time, identifies the minimum resources needed to recover and prioritizes the recovery of processes and the supporting system.\"",
+   "note": "ISACA confirms impact and criticality. It does not name RTO and RPO as outputs. The Sybex guide does (p2:4450)."
+  },
+  {
+   "kind": "glossary",
+   "term": "Statistical sampling",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Statistical sampling: \"A method of selecting a portion of a population by means of mathematical calculations and probabilities for the purpose of making scientifically and mathematically sound inferences regarding the characteristics of the entire population\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Attribute sampling",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Attribute sampling: \"A method to select a portion of a population based on the presence or absence of a certain characteristic\"",
+   "note": "The link to compliance testing is not in the ISACA definition."
+  },
+  {
+   "kind": "glossary",
+   "term": "Variable sampling",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Variable sampling: \"A sampling technique used to estimate the average or total value of a population based on a sample. It is a statistical model used to project a quantitative characteristic, such as a monetary amount.\"",
+   "note": "The link to substantive testing is not in the ISACA definition."
+  },
+  {
+   "kind": "glossary",
+   "term": "Compliance test",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Compliance testing: \"Control tests designed to obtain evidence on both the effectiveness of the controls and their operation during the audit period\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Substantive test",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Substantive testing: \"Obtaining audit evidence on the completeness, accuracy or existence of activities or transactions during the audit period\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Continuous auditing",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Continuous auditing approach: \"Allows IS auditors to monitor system reliability on a continuous basis and to gather selective audit evidence through the computer\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Control self-assessment (CSA)",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Control risk self-assessment: \"A method/process by which management and staff at all levels collectively identify and evaluate risk and controls within their business areas. This assessment may be under the guidance of a facilitator, such as an auditor or risk manager.\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Preventive / detective / corrective control",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Preventive control: \"used to avoid undesirable events\"; Detective control: \"designed to detect and report when errors, omissions and unauthorized uses or entries occur\"; Corrective control: \"designed to correct errors, omissions, unauthorized uses and intrusions, once they are detected\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "IT governance",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Enterprise governance: \"A set of responsibilities and practices exercised by the board and executive management with the goal of providing strategic direction, ensuring that objectives are achieved, ascertaining that risk is managed appropriately...\"; EGIT: \"A concern for the value delivery from digital transformation and the mitigation of business risk\"",
+   "note": "ISACA places governance with the board and executive management. The Sybex guide says senior management (p1:1339)."
+  },
+  {
+   "kind": "glossary",
+   "term": "Steering committee",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "IT steering committee: \"An executive-management-level committee that assists in the delivery of the IT strategy, oversees day-to-day management of IT service delivery and IT projects, and focuses on implementation aspects\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Balanced scorecard",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Balanced scorecard (BSC): \"A coherent set of performance measures organized into four categories that include traditional financial measures and customer, internal business process and learning and growth perspectives\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Service level agreement (SLA)",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Service level agreement (SLA): \"An agreement, preferably documented, between a service provider and the customer(s)/user(s) that defines minimum performance targets for a service and how they will be measured\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "SDLC",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "System development life cycle (SDLC), scope notes: \"Typical phases of SDLC include the feasibility study, requirements study, requirements definition, detailed design, programming, testing, installation and postimplementation review\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Post-implementation review",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "SDLC scope notes list \"postimplementation review\" as an SDLC phase.",
+   "note": "ISACA has no glossary entry for the review itself. The definition is supported by the Sybex guide only (p1:6219)."
+  },
+  {
+   "kind": "glossary",
+   "term": "Parallel changeover",
+   "status": "not_verified",
+   "source_type": null,
+   "url": null,
+   "evidence": "",
+   "note": "The term is not in the ISACA glossary (checked 2026-10-25). Only the Sybex guide supports it (\"Parallel Cutover\", p1:6197)."
+  },
+  {
+   "kind": "glossary",
+   "term": "Abrupt (direct) changeover",
+   "status": "not_verified",
+   "source_type": null,
+   "url": null,
+   "evidence": "",
+   "note": "Not in the ISACA glossary. The CISM terminology list (existing source) names the term without defining it. The Sybex guide calls it \"All-at-Once Cutover\" (p1:6203)."
+  },
+  {
+   "kind": "glossary",
+   "term": "Change management",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Change management (CMMI sense): \"A methodical approach for controlling and implementing changes in a planned and structured manner\"; Change control: \"The processes, authorities, and procedures used for all changes made to a computerized system\"",
+   "note": "The ISACA glossary's first change management sense is organisational (human) change. Its \"change enablement\" entry also has the organisational sense. The ITIL 4 rename was not checked against AXELOS in this pass."
+  },
+  {
+   "kind": "glossary",
+   "term": "Hot / warm / cold site",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Hot site: \"A fully operational offsite data processing facility equipped with both hardware and system software\"; Warm site: \"similar to a hot site but not fully equipped with all of the necessary hardware\"; Cold site: \"has the necessary electrical and physical components of a computer facility but does not have the computer equipment in place\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Encryption (symmetric / asymmetric)",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Symmetric key encryption: \"The same key is used for encryption and decryption\"; Asymmetric key (public key): \"A cipher technique in which different cryptographic keys are used to encrypt and decrypt a message\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Digital signature",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Digital signature: \"An electronic identification of a person or entity using a public key algorithm that serves as a way for the recipient to verify the identity of the sender, integrity of the data and proof of transaction\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "Data owner / data custodian",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Data owner: \"Individual(s) responsible for the integrity, accuracy, and use of data within an organization\"; Data custodian: \"Individual(s) and department(s) responsible for the storage and safeguarding of computerized data\"",
+   "note": "\"The owner sets classification and access\" is not stated in the ISACA glossary."
+  },
+  {
+   "kind": "glossary",
+   "term": "Access control",
+   "status": "verified",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Access control: \"The processes, rules and deployment mechanisms that control access to information systems, resources and physical access to premises\"",
+   "note": ""
+  },
+  {
+   "kind": "glossary",
+   "term": "False acceptance rate (FAR) / false rejection rate (FRR) / crossover error rate (CER)",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "False authorization: \"Also called false acceptance, occurs when an unauthorized person is identified as an authorized person by the biometric system\"",
+   "note": "The ISACA glossary has no FRR, CER/EER or Type I/II entries. NIST CSRC glossary term pages for these returned 404. FRR and CER are supported by the Sybex guide only. The Type I/II labels are not verified."
+  },
+  {
+   "kind": "exam_trap",
+   "domain": "D2",
+   "confused_concepts": "Data owner vs data custodian",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "Data owner: \"responsible for the integrity, accuracy, and use of data\"; Data custodian: \"responsible for the storage and safeguarding of computerized data\"",
+   "note": "The custodian half is verified. \"The owner classifies and approves access\" is not in the ISACA glossary. The Sybex guide p2:7308 says the auditor checks whether system or data owners approve access."
+  },
+  {
+   "kind": "exam_trap",
+   "domain": "D4",
+   "confused_concepts": "ISO/IEC 27031 vs BCMS",
+   "status": "not_verified",
+   "source_type": "standards body",
+   "url": "https://webstore.iec.ch/en/publication/107542",
+   "evidence": "ISO/IEC 27031:2025 abstract: describes \"ICT readiness for business continuity (IRBC)\" and \"how ICT departments plan and prepare to contribute to the resilience objectives of the organization\".",
+   "note": "The abstract does not mention ISO 22301 or say that 27031 does not replace a BCMS. iso.org returned 403 on 2026-10-25."
+  },
+  {
+   "kind": "exam_trap",
+   "domain": "D5",
+   "confused_concepts": "FAR vs FRR vs CER",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/resources/glossary",
+   "evidence": "False authorization: \"Also called false acceptance, occurs when an unauthorized person is identified as an authorized person by the biometric system\"",
+   "note": "ISACA defines false acceptance only. The Sybex guide (p2:6577-6585, p2:10717) says false acceptance is the more serious error and CER is the comparison measure. The Type II label and \"lower CER = more accurate\" are not verified."
+  },
+  {
+   "kind": "theme",
+   "theme": "CISM 2026 update is not a CISA update",
+   "status": "partial",
+   "source_type": "isaca",
+   "url": "https://www.isaca.org/about-us/newsroom/press-releases/2026/isaca-updates-cism-exam-content-outline-factoring-in-todays-technologies-security-responsibilities",
+   "evidence": "ISACA press release 2026: \"the updated CISM exam will be available on 3 November 2026\"",
+   "note": "The CISM update and its date are verified. The release concerns CISM only. That the CISA 2024 job practice is still current rests on the existing key fact. ISACA's \"at least every five years\" review cycle was found only in third-party copies, so the ~2029 date stays an inference."
+  }
+ ],
+ "unverified_items": [
+  [
+   "CrowdStrike 8.5 million",
+   "resolved",
+   "Confirmed 2026-10-25 in Microsoft's own blog (20 Jul 2024): \"We currently estimate that CrowdStrike's update affected 8.5 million Windows devices, or less than one percent of all Windows machines.\"",
+   "None.",
+   "https://blogs.microsoft.com/blog/2024/07/20/helping-our-customers-through-the-crowdstrike-outage/",
+   "primary (company)"
+  ],
+  [
+   "Maersk USD 250-300M",
+   "open",
+   "2026-10-25: investor.maersk.com (Q2 2017 interim report and its static PDF) returned 403 to curl, Chromium and WebFetch; the Wayback API returned 429. SiliconANGLE (media, 16 Aug 2017) says the Q2 interim report put the cost at \"between $200 million and $300 million\", not USD 250-300M. Media figures disagree; primary not reached.",
+   "Open the Maersk Q2 2017 interim report from a normal browser and correct the range.",
+   "https://siliconangle.com/2017/08/16/shipping-giant-maesrk-says-notpetya-attack-cost-300m/",
+   "media"
+  ],
+  [
+   "KPMG $50M penalty",
+   "resolved",
+   "2026-10-25: Accounting Today (trade press, 10 Nov 2015) says the PCAOB found deficiencies in 23 of 50 audits in its 2013 inspection report (46%) and 28 of 52 in the 2014 inspection (54%). So 46% belongs to the 2013 inspection, not 2014. The PCAOB PDF (pcaobus.org/Inspections/Reports/Documents/2014_KPMG_LLP.PDF) returned 403. The figure is not used in any wiki record.",
+   "None. Do not cite \"46% in 2014\".",
+   "https://www.accountingtoday.com/news/pcaob-faults-kpmg-in-latest-inspection-report",
+   "media"
+  ],
+  [
+   "IIA external quality assessment",
+   "resolved",
+   "Confirmed 2026-10-25 on the IIA QAIP page (GIAS Standard 8.4): \"The external assessment must be performed at least once every five years by a qualified, independent assessor or assessment team.\"",
+   "None.",
+   "https://www.theiia.org/en/group-services/quality-assurance/quality-services/qaip/",
+   "standards body"
+  ],
+  [
+   "Capital One technical root cause",
+   "open",
+   "2026-10-25: the DOJ case page confirms \"The intrusion occurred through a misconfigured web application firewall that enabled access to the data.\" SSRF and the IAM role detail are not on that page.",
+   "Keep omitted unless the criminal complaint PDF is checked.",
+   "https://www.justice.gov/usao-wdwa/united-states-v-paige-thompson",
+   "government"
+  ],
+  [
+   "SolarWinds SUNSPOT",
+   "resolved",
+   "Confirmed 2026-10-25 in CrowdStrike's analysis: \"SUNSPOT monitors running processes for those involved in compilation of the Orion product and replaces one of the source files to include the SUNBURST backdoor code.\"",
+   "None.",
+   "https://www.crowdstrike.com/en-us/blog/sunspot-malware-technical-analysis/",
+   "vendor"
+  ],
+  [
+   "OCC Capital One press release",
+   "resolved",
+   "URL loads 2026-10-25: \"OCC Assesses $80 Million Civil Money Penalty Against Capital One\".",
+   "None.",
+   "https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-101.html",
+   "regulator"
+  ],
+  [
+   "CISA AA20-352A and AA23-158A",
+   "resolved",
+   "Both pages load in headless Chromium 2026-10-25 (curl gets 403): AA20-352A \"Advanced Persistent Threat Compromise of Government Agencies, Critical Infrastructure, and Private Sector Organizations\"; AA23-158A \"#StopRansomware: CL0P Ransomware Gang Exploits CVE-2023-34362 MOVEit Vulnerability\".",
+   "None.",
+   "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-352a",
+   "government"
+  ],
+  [
+   "OWASP ASVS 5.0",
+   "resolved",
+   "owasp.org project page redirects to asvs.owasp.org, which offers \"ASVS 5.0.0\" as the latest stable version (2026-10-25).",
+   "None.",
+   "https://owasp.org/www-project-application-security-verification-standard/",
+   "standards body"
+  ],
+  [
+   "Status of NIST SSDF",
+   "resolved",
+   "2026-10-25: CSRC lists SP 800-218 Rev. 1 as \"Initial Public Draft\" (comments closed 30 Jan 2026); the /final page returns 404, so SSDF 1.2 is still a draft. top10.owasp.org/2025 says \"Welcome to the OWASP Top 10:2025 Release\" with no release-candidate label, so Top 10:2025 is final.",
+   "None.",
+   "https://csrc.nist.gov/pubs/sp/800/218/r1/ipd",
+   "standards body"
+  ],
+  [
+   "ISO/IEC 27001:2022, NIST SP 800-53",
+   "resolved",
+   "URLs load 2026-10-25: iso.org/standard/27001 (Chromium; \"ISO/IEC 27001:2022 ... Information security management systems - Requirements\"), csrc.nist.gov/pubs/sp/800/53/r5/upd1/final, nist.gov/cyberframework.",
+   "None.",
+   "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
+   "standards body"
+  ],
+  [
+   "Primary NIST PDFs",
+   "resolved",
+   "PDFs load 2026-10-25: nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-37r2.pdf, nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-39.pdf, nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf.",
+   "None.",
+   "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-37r2.pdf",
+   "standards body"
+  ],
+  [
+   "ISACA COBIT 2019 product page",
+   "resolved",
+   "isaca.org/resources/cobit loads 2026-10-25 and links COBIT 2019 resources.",
+   "None.",
+   "https://www.isaca.org/resources/cobit",
+   "isaca"
+  ],
+  [
+   "Date ISACA changed the eligibility window",
+   "open",
+   "2026-10-25 search found no ISACA announcement date; isaca.org still says six months.",
+   "Check older Candidate Guide versions if needed.",
+   null,
+   null
+  ],
+  [
+   "YouTube candidate",
+   "open",
+   "Retried 2026-10-25: watch pages redirect to google.com/sorry (HTTP 429), so upload dates still cannot be read here.",
+   "Open the video page from a normal browser.",
+   null,
+   null
+  ]
+ ],
+ "extra_urls": {
+  "https://www.isaca.org/resources/glossary": [
+   "ok",
+   "Loads (curl 200, 2026-10-25); glossary definitions quoted in record verification fields."
+  ],
+  "https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-34r1.pdf": [
+   "ok",
+   "PDF loads 2026-10-25; sec. 3.2.1 defines MTD and says the RTO must be shorter than the MTD."
+  ],
+  "https://webstore.iec.ch/en/publication/107542": [
+   "ok",
+   "IEC webstore page for ISO/IEC 27031:2025 loads 2026-10-25; abstract lists MBCO, RPO, RTO."
+  ]
+ }
+}
