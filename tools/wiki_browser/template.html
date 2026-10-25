@@ -279,7 +279,7 @@ for (const d of DOMAINS) {
   (d.sources || []).forEach(s => add('source', d.id, s, [s.url]));
 }
 (W.cross_domain_themes || []).forEach(t => add('theme', null, t, [t.source_url, ...asList(t.additional_source_urls)], { domains: asList(t.domains).filter(x => DMAP[x]) }));
-(W.glossary || []).forEach(g => add('glossary', DMAP[g.domain] ? g.domain : null, g, [g.source_url]));
+(W.glossary || []).forEach(g => add('glossary', DMAP[g.domain] ? g.domain : null, g, [g.source_url, ...asList(g.source_urls)]));
 (W.key_facts || []).forEach((f, i) => add('fact', null, f, asList(f.source_urls), {
   idx: i, domains: asList(f.domains).filter(x => DMAP[x]),
 }));
@@ -355,7 +355,10 @@ function domPills(e) {
 }
 function kindPill(e, show) { return show ? `<span class="pill kind">${KINDS[e.kind].one}</span>` : ''; }
 function lcRows(o) {
-  return [['Flag', o.flag], ['Link check', o.link_check]];
+  const v = o.verification, b = o.sybex_check;
+  return [['Flag', o.flag], ['Link check', o.link_check],
+    ['Verification', v && `${v.status}${v.source_type ? ` (${v.source_type})` : ''}, ${v.checked}. ${v.evidence || ''}${v.note ? ` ${v.note}` : ''}`],
+    ['Sybex check', b && `${b.label}. ${b.note}`]];
 }
 function bookCite(r) {
   if (!r) return '';
@@ -377,7 +380,7 @@ const R = {
     ${links(e.urls, 'No source URL. Written from general CISA body of knowledge.')}</article>`; },
   trap: (e, ctx) => { const t = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(t.confused_concepts)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${basisPill(t.basis)}</div>
-    ${kv([['Rule', t.rule], ['Note', t.note], ...lcRows(t)])}${links(e.urls)}</article>`; },
+    ${kv([['Rule', t.rule], ['Note', t.note], ...lcRows(t)])}${links(e.urls)}${asList(t.book_refs).map(bookCite).join('')}</article>`; },
   example: (e, ctx) => { const x = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(x.name)} <span class="muted mono" style="font-weight:400;font-size:.85em">${hl(x.date)}</span></h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${srcPill(x.source_type)}</div>
     ${kv([['What happened', x.what_happened], ['Control', x.control_failed_or_worked], ['Maps to', x.maps_to_subtopic], ['Note', x.note], ...lcRows(x)])}${links(e.urls)}</article>`; },
@@ -393,10 +396,10 @@ const R = {
     <div class="link"><a href="${esc(v.url)}" target="_blank" rel="noopener noreferrer">${TOKEN_RE ? hl(shortUrl(v.url)) : esc(shortUrl(v.url))}</a></div></div></article>`; },
   theme: (e, ctx) => { const t = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(t.theme)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}${basisPill(t.basis)}</div>
-    ${kv([['Description', t.description], ...lcRows(t)])}${links(e.urls)}</article>`; },
+    ${kv([['Description', t.description], ...lcRows(t)])}${links(e.urls)}${asList(t.book_refs).map(bookCite).join('')}</article>`; },
   glossary: (e, ctx) => { const g = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(g.term)}</h3>${kindPill(e, ctx.mixed)}${basisPill(g.basis)}</div>
-    ${kv([['Definition', g.definition], ['Book definition', g.book_definition], ['Note', g.note], ...lcRows(g)])}${g.basis === 'book' && !e.urls.length ? '' : links(e.urls)}${bookCite(g.book_ref)}</article>`; },
+    ${kv([['Definition', g.definition], ['Book definition', g.book_definition], ['Note', g.note], ...lcRows(g)])}${g.basis === 'book' && !e.urls.length ? '' : links(e.urls)}${bookCite(g.book_ref)}${asList(g.book_refs).map(bookCite).join('')}</article>`; },
   booktip: (e, ctx) => { const t = e.raw; return `<article class="entry">
     <div class="ehead"><h3>${hl(t.book_ref.section || 'Exam tip')}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${basisPill(t.basis)}</div>
     ${kv([['Tip', t.tip], ['Maps to', t.maps_to_subtopic]])}${bookCite(t.book_ref)}</article>`; },

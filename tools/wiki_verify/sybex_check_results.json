@@ -1,0 +1,884 @@
+[
+ {
+  "kind": "exam_trap",
+  "domain": "D4",
+  "confused_concepts": "SDO vs RTO",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book defines SDO as the agreed level or quality of service at an alternate processing site, measured in throughput, quality, response time or features, so 'a service level, not a time' is supported. The book does not say the RTO is defined in relation to the SDO.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 6 Business Continuity and Disaster Recovery",
+    "section": "Service Delivery Objective",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 3754,
+    "chunk": "study-guide/chunks/p2_02_ch6_bc_dr_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 6 Business Continuity and Disaster Recovery, \"Service Delivery Objective\", study-guide/sybex_cisa_study_guide_part2.md line 3754"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 6 Business Continuity and Disaster Recovery",
+    "section": "Establishing Key Recovery Targets",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 2997,
+    "chunk": "study-guide/chunks/p2_02_ch6_bc_dr_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 6 Business Continuity and Disaster Recovery, \"Establishing Key Recovery Targets\", study-guide/sybex_cisa_study_guide_part2.md line 2997"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Maximum tolerable downtime (MTD)",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book: MTD is the interval from onset of a disaster after which the organization's survival is at risk, and it aids setting recovery targets. The book's threshold is 'survival at risk', not 'impact unacceptable'. 'RTO must fit within it' is not stated explicitly.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 6 Business Continuity and Disaster Recovery",
+    "section": "Determine Maximum Tolerable Downtime",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 2986,
+    "chunk": "study-guide/chunks/p2_02_ch6_bc_dr_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 6 Business Continuity and Disaster Recovery, \"Determine Maximum Tolerable Downtime\", study-guide/sybex_cisa_study_guide_part2.md line 2986"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Acceptable interruption window",
+  "status": "not_found",
+  "label": "not found in Sybex guide",
+  "note": "Term not in the book.",
+  "book_refs": []
+ },
+ {
+  "kind": "glossary",
+  "term": "Service delivery objective (SDO)",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: agreed-upon level or quality of service at an alternate processing site. 'Until normal operation resumes' is not stated. Note: the book's BIA list (p2:2997) describes SDO more loosely as 'some aspect of service delivery, such as SLAs'.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 6 Business Continuity and Disaster Recovery",
+    "section": "Service Delivery Objective",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 3754,
+    "chunk": "study-guide/chunks/p2_02_ch6_bc_dr_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 6 Business Continuity and Disaster Recovery, \"Service Delivery Objective\", study-guide/sybex_cisa_study_guide_part2.md line 3754"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Minimum business continuity objective (MBCO)",
+  "status": "not_found",
+  "label": "not found in Sybex guide",
+  "note": "Term not in the book.",
+  "book_refs": []
+ },
+ {
+  "kind": "glossary",
+  "term": "Control risk",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: risk that a material error exists that will not be prevented or detected by the control framework. 'On time' is not in the book.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Audit Risk and Materiality",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4554,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Audit Risk and Materiality\", study-guide/sybex_cisa_study_guide_part1.md line 4554"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Inherent risk",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: material weaknesses exist and there are no compensating controls to detect or prevent them. Same idea as 'before any controls', different wording.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Audit Risk and Materiality",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4556,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Audit Risk and Materiality\", study-guide/sybex_cisa_study_guide_part1.md line 4556"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Detection risk",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book: risk that the IS auditor overlooks errors or exceptions during an audit. The book does not mention substantive procedures or the IS/IT-risk sense of 'detection'.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Audit Risk and Materiality",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4555,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Audit Risk and Materiality\", study-guide/sybex_cisa_study_guide_part1.md line 4555"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Materiality",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book: in financial audits a dollar threshold; in IS audits a deficiency is material when it makes serious errors, omissions, irregularities or illegal acts possible, judged by the auditor. 'Significance to the user' is not in the book.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Audit Risk and Materiality",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4561,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Audit Risk and Materiality\", study-guide/sybex_cisa_study_guide_part1.md line 4561"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Audit Risk and Materiality",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4565,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Audit Risk and Materiality\", study-guide/sybex_cisa_study_guide_part1.md line 4565"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Segregation of duties (SoD)",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: no single individual should be able to perform high-value, high-sensitivity or high-risk actions; two or more parties are required.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 1 IT Governance and Management",
+    "section": "Segregation of Duties",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 2801,
+    "chunk": "study-guide/chunks/p1_04_ch1_it_governance_05.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 1 IT Governance and Management, \"Segregation of Duties\", study-guide/sybex_cisa_study_guide_part1.md line 2801"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Access Control Concepts",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6374,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Access Control Concepts\", study-guide/sybex_cisa_study_guide_part2.md line 6374"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Least privilege",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: lowest privilege that still lets the user perform required tasks.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Access Control Concepts",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6373,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Access Control Concepts\", study-guide/sybex_cisa_study_guide_part2.md line 6373"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Need to know",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Not defined as a term. The same idea appears under least privilege: no user or process without a need to access specific files should be able to.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Access Controls",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6653,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Access Controls\", study-guide/sybex_cisa_study_guide_part2.md line 6653"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Business impact analysis (BIA)",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: BIA identifies the impact of scenarios on operations and determines dependencies and relative criticality; one output is a set of recovery targets (RTO, RPO, RCapO, RCO).",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 6 Business Continuity and Disaster Recovery",
+    "section": "Business Impact Analysis",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 2875,
+    "chunk": "study-guide/chunks/p2_02_ch6_bc_dr_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 6 Business Continuity and Disaster Recovery, \"Business Impact Analysis\", study-guide/sybex_cisa_study_guide_part2.md line 2875"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 6 Business Continuity and Disaster Recovery",
+    "section": "Exam Essentials",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 4448,
+    "chunk": "study-guide/chunks/p2_02_ch6_bc_dr_06.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 6 Business Continuity and Disaster Recovery, \"Exam Essentials\", study-guide/sybex_cisa_study_guide_part2.md line 4448"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Statistical sampling",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: random or semi-random selection that statistically reflects the population, each item with an equal chance; confidence coefficient expresses the probability the sample represents the population.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Sampling",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4329,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Sampling\", study-guide/sybex_cisa_study_guide_part1.md line 4329"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Sampling",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4345,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Sampling\", study-guide/sybex_cisa_study_guide_part1.md line 4345"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Attribute sampling",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: answers 'How many?', estimates the rate at which an attribute occurs; used to understand control performance.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Sampling",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4334,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Sampling\", study-guide/sybex_cisa_study_guide_part1.md line 4334"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Exam Essentials",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4739,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Exam Essentials\", study-guide/sybex_cisa_study_guide_part1.md line 4739"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Variable sampling",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book: answers 'How much?', e.g. total inventory value. The link to substantive testing is not stated.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Sampling",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4335,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Sampling\", study-guide/sybex_cisa_study_guide_part1.md line 4335"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Compliance test",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: whether control procedures are appropriately designed, implemented and operating correctly.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Compliance vs. Substantive Testing",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4118,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Compliance vs. Substantive Testing\", study-guide/sybex_cisa_study_guide_part1.md line 4118"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Substantive test",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: accuracy and integrity of transactions flowing through processes and systems. 'Balances' is not mentioned.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Compliance vs. Substantive Testing",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4119,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Compliance vs. Substantive Testing\", study-guide/sybex_cisa_study_guide_part1.md line 4119"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Continuous auditing",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book: CAATs gather samples automatically over long periods, with frequent notifications and triggers on control failures; systems are tested while running. 'At or near the time of events' is not stated verbatim.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Continuous Auditing",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4455,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Continuous Auditing\", study-guide/sybex_cisa_study_guide_part1.md line 4455"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 3 IT Life Cycle Management",
+    "section": "Continuous Auditing",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 7194,
+    "chunk": "study-guide/chunks/p1_06_ch3_it_life_cycle_07.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 3 IT Life Cycle Management, \"Continuous Auditing\", study-guide/sybex_cisa_study_guide_part1.md line 7194"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Control self-assessment (CSA)",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: the organization reviews its own objectives, risks and key controls instead of engaging outsiders; answer key: the IS auditor acts as facilitator and management decides on control changes. Note: body text (p1:4657) describes the auditor's role as an 'objective subject matter expert' who guides discussions.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Control Self-Assessment",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 4594,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Control Self-Assessment\", study-guide/sybex_cisa_study_guide_part1.md line 4594"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Appendix B Answers to Review Questions",
+    "section": "Chapter 2: The Audit Process",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 10554,
+    "chunk": "study-guide/chunks/p2_07_appB_review_answers_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Appendix B Answers to Review Questions, \"Chapter 2: The Audit Process\", study-guide/sybex_cisa_study_guide_part2.md line 10554"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Preventive / detective / corrective control",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book defines preventive (prevents the event), detective (records it) and corrective (acts after it), which fits 'by when they act'. The book lists six classes; deterrent, compensating and recovery are not timing-based.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 2 The Audit Process",
+    "section": "Classes of Controls",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 3934,
+    "chunk": "study-guide/chunks/p1_05_ch2_audit_process_02.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 2 The Audit Process, \"Classes of Controls\", study-guide/sybex_cisa_study_guide_part1.md line 3934"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "IT governance",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book: top-down strategic control of IT by senior management to align IT with business objectives; the board sets top-level objectives and may have an IT strategy committee. Wording differs: the book places governance with senior management, the wiki says 'board-level responsibility'. 'Deliver value and manage risk' is not the book's wording.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 1 IT Governance and Management",
+    "section": "Chapter 1",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 1339,
+    "chunk": "study-guide/chunks/p1_04_ch1_it_governance_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 1 IT Governance and Management, \"Chapter 1\", study-guide/sybex_cisa_study_guide_part1.md line 1339"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 1 IT Governance and Management",
+    "section": "IT Governance",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 1361,
+    "chunk": "study-guide/chunks/p1_04_ch1_it_governance_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 1 IT Governance and Management, \"IT Governance\", study-guide/sybex_cisa_study_guide_part1.md line 1361"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 1 IT Governance and Management",
+    "section": "IT Strategy Committee",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 1396,
+    "chunk": "study-guide/chunks/p1_04_ch1_it_governance_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 1 IT Governance and Management, \"IT Strategy Committee\", study-guide/sybex_cisa_study_guide_part1.md line 1396"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Steering committee",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: body of senior managers or executives discussing high-level, long-term issues and assessing results of major projects; answer key says its minutes record decisions on project priorities.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 1 IT Governance and Management",
+    "section": "The IT Steering Committee",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 1504,
+    "chunk": "study-guide/chunks/p1_04_ch1_it_governance_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 1 IT Governance and Management, \"The IT Steering Committee\", study-guide/sybex_cisa_study_guide_part1.md line 1504"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Appendix B Answers to Review Questions",
+    "section": "Chapter 1: IT Governance and Management",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 10494,
+    "chunk": "study-guide/chunks/p2_07_appB_review_answers_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Appendix B Answers to Review Questions, \"Chapter 1: IT Governance and Management\", study-guide/sybex_cisa_study_guide_part2.md line 10494"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Balanced scorecard",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: four perspectives: financial, customer, internal business, innovation and learning.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 1 IT Governance and Management",
+    "section": "The Balanced Scorecard",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 1404,
+    "chunk": "study-guide/chunks/p1_04_ch1_it_governance_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 1 IT Governance and Management, \"The Balanced Scorecard\", study-guide/sybex_cisa_study_guide_part1.md line 1404"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Service level agreement (SLA)",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: formal, written statements of response time, availability and other performance measures, often negotiated between IT and its customers.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 4 IT Service Management",
+    "section": "IT Service Level Management",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 15,
+    "chunk": "study-guide/chunks/p2_00_ch4_it_service_mgmt_end_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 4 IT Service Management, \"IT Service Level Management\", study-guide/sybex_cisa_study_guide_part2.md line 15"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 4 IT Service Management",
+    "section": "IT Service Level Management",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 32,
+    "chunk": "study-guide/chunks/p2_00_ch4_it_service_mgmt_end_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 4 IT Service Management, \"IT Service Level Management\", study-guide/sybex_cisa_study_guide_part2.md line 32"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "SDLC",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: waterfall phases with sections Feasibility Study (p1:5714), Requirements Definition (5745), Design (5922), Development (5958), Testing (6038), Implementation (6113), Post-Implementation (6215). The bullet list at p1:5670 shows only five phases (likely a conversion loss).",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 3 IT Life Cycle Management",
+    "section": "SDLC Methodology Phases",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 5667,
+    "chunk": "study-guide/chunks/p1_06_ch3_it_life_cycle_02.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 3 IT Life Cycle Management, \"SDLC Methodology Phases\", study-guide/sybex_cisa_study_guide_part1.md line 5667"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Post-implementation review",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: formal reviews after implementation of open issues, security, audit and ROI; major projects review whether key metrics changed as predicted; objective 19 checks whether deliverables, controls and requirements are met.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 3 IT Life Cycle Management",
+    "section": "Post-Implementation Review",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 6219,
+    "chunk": "study-guide/chunks/p1_06_ch3_it_life_cycle_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 3 IT Life Cycle Management, \"Post-Implementation Review\", study-guide/sybex_cisa_study_guide_part1.md line 6219"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 3 IT Life Cycle Management",
+    "section": "Measuring Business Benefits",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 5021,
+    "chunk": "study-guide/chunks/p1_06_ch3_it_life_cycle_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 3 IT Life Cycle Management, \"Measuring Business Benefits\", study-guide/sybex_cisa_study_guide_part1.md line 5021"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Parallel changeover",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: 'Parallel Cutover', old and new run in parallel with comparisons.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 3 IT Life Cycle Management",
+    "section": "Implementation: Cutover",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 6197,
+    "chunk": "study-guide/chunks/p1_06_ch3_it_life_cycle_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 3 IT Life Cycle Management, \"Implementation: Cutover\", study-guide/sybex_cisa_study_guide_part1.md line 6197"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Abrupt (direct) changeover",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book calls it 'All-at-Once Cutover': migrate the entire environment at one time.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 3 IT Life Cycle Management",
+    "section": "Implementation: Cutover",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 6203,
+    "chunk": "study-guide/chunks/p1_06_ch3_it_life_cycle_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 3 IT Life Cycle Management, \"Implementation: Cutover\", study-guide/sybex_cisa_study_guide_part1.md line 6203"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Change management",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: every change formally requested, reviewed (CAB) and approved, then performed and verified by tests. The ITIL 4 'change enablement' name is not in the book.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 3 IT Life Cycle Management",
+    "section": "Change Management",
+    "file": "study-guide/sybex_cisa_study_guide_part1.md",
+    "line": 6566,
+    "chunk": "study-guide/chunks/p1_06_ch3_it_life_cycle_05.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 3 IT Life Cycle Management, \"Change Management\", study-guide/sybex_cisa_study_guide_part1.md line 6566"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Hot / warm / cold site",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: hot sites permit rapid recovery, cold sites much slower; hot site for RTO zero to ~24 h (p2:3832).",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 6 Business Continuity and Disaster Recovery",
+    "section": "Site Recovery Options",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 3805,
+    "chunk": "study-guide/chunks/p2_02_ch6_bc_dr_04.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 6 Business Continuity and Disaster Recovery, \"Site Recovery Options\", study-guide/sybex_cisa_study_guide_part2.md line 3805"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Encryption (symmetric / asymmetric)",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: symmetric uses a shared secret key; asymmetric is public key cryptography.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 7 Information Security Management",
+    "section": "Symmetric Key Algorithms",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 5466,
+    "chunk": "study-guide/chunks/p2_03_ch7_infosec_mgmt_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 7 Information Security Management, \"Symmetric Key Algorithms\", study-guide/sybex_cisa_study_guide_part2.md line 5466"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 7 Information Security Management",
+    "section": "Nonrepudiation",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 5462,
+    "chunk": "study-guide/chunks/p2_03_ch7_infosec_mgmt_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 7 Information Security Management, \"Nonrepudiation\", study-guide/sybex_cisa_study_guide_part2.md line 5462"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Digital signature",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: assures origin (nonrepudiation) and that the message was not altered (integrity); uses public key cryptography plus hashing (p2:5553).",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 7 Information Security Management",
+    "section": "Digital Signatures",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 5546,
+    "chunk": "study-guide/chunks/p2_03_ch7_infosec_mgmt_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 7 Information Security Management, \"Digital Signatures\", study-guide/sybex_cisa_study_guide_part2.md line 5546"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Data owner / data custodian",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book: owner sets policies for data use and security and makes final decisions; custodians store and process the data (often IT). 'Owner sets classification' is not stated explicitly. The book also defines a data steward role.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 7 Information Security Management",
+    "section": "Cybersecurity Responsibilities",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 4883,
+    "chunk": "study-guide/chunks/p2_03_ch7_infosec_mgmt_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 7 Information Security Management, \"Cybersecurity Responsibilities\", study-guide/sybex_cisa_study_guide_part2.md line 4883"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 7 Information Security Management",
+    "section": "Cybersecurity Responsibilities",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 4887,
+    "chunk": "study-guide/chunks/p2_03_ch7_infosec_mgmt_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 7 Information Security Management, \"Cybersecurity Responsibilities\", study-guide/sybex_cisa_study_guide_part2.md line 4887"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "Access control",
+  "status": "supported",
+  "label": "book-supported (third-party, not ISACA-verified)",
+  "note": "Book: a logical access control identifies the subject and decides whether it may access the object.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Logical Access Controls",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6357,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Logical Access Controls\", study-guide/sybex_cisa_study_guide_part2.md line 6357"
+   }
+  ]
+ },
+ {
+  "kind": "glossary",
+  "term": "False acceptance rate (FAR) / false rejection rate (FRR) / crossover error rate (CER)",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "FAR, FRR and CER (equal FAR and FRR) are supported. The Type I / Type II labels are not in the book.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Authentication Errors",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6577,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Authentication Errors\", study-guide/sybex_cisa_study_guide_part2.md line 6577"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Authentication Errors",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6579,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Authentication Errors\", study-guide/sybex_cisa_study_guide_part2.md line 6579"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Authentication Errors",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6585,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Authentication Errors\", study-guide/sybex_cisa_study_guide_part2.md line 6585"
+   }
+  ]
+ },
+ {
+  "kind": "exam_trap",
+  "domain": "D2",
+  "confused_concepts": "Data owner vs data custodian",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book: the owner sets policies for data use and security and makes final decisions; custodians store and process the data; the auditor checks whether system or data owners approve access requests. 'Owner classifies' is not stated explicitly.",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 7 Information Security Management",
+    "section": "Cybersecurity Responsibilities",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 4883,
+    "chunk": "study-guide/chunks/p2_03_ch7_infosec_mgmt_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 7 Information Security Management, \"Cybersecurity Responsibilities\", study-guide/sybex_cisa_study_guide_part2.md line 4883"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 7 Information Security Management",
+    "section": "Cybersecurity Responsibilities",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 4887,
+    "chunk": "study-guide/chunks/p2_03_ch7_infosec_mgmt_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 7 Information Security Management, \"Cybersecurity Responsibilities\", study-guide/sybex_cisa_study_guide_part2.md line 4887"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Auditing User Access Provisioning",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 7308,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_03.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Auditing User Access Provisioning\", study-guide/sybex_cisa_study_guide_part2.md line 7308"
+   }
+  ]
+ },
+ {
+  "kind": "exam_trap",
+  "domain": "D4",
+  "confused_concepts": "ISO/IEC 27031 vs BCMS",
+  "status": "not_found",
+  "label": "not found in Sybex guide",
+  "note": "Neither ISO/IEC 27031 nor ISO 22301 appears in the book text.",
+  "book_refs": []
+ },
+ {
+  "kind": "exam_trap",
+  "domain": "D5",
+  "confused_concepts": "FAR vs FRR vs CER",
+  "status": "partial",
+  "label": "partly book-supported (third-party, not ISACA-verified)",
+  "note": "Book: false acceptance is 'a very serious error', false rejection 'not as serious'; CER is where FAR equals FRR and is the best comparison measure. The Type II label and 'lower CER means a more accurate system' are not in the book text (Figure 8.4 image is missing).",
+  "book_refs": [
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Authentication Errors",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6577,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Authentication Errors\", study-guide/sybex_cisa_study_guide_part2.md line 6577"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Authentication Errors",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6579,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Authentication Errors\", study-guide/sybex_cisa_study_guide_part2.md line 6579"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Ch 8 Identity and Access Management",
+    "section": "Authentication Errors",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 6585,
+    "chunk": "study-guide/chunks/p2_04_ch8_iam_01.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Ch 8 Identity and Access Management, \"Authentication Errors\", study-guide/sybex_cisa_study_guide_part2.md line 6585"
+   },
+   {
+    "source": "Sybex CISA Study Guide (Gregory & Chapple, 2025)",
+    "chapter": "Appendix B Answers to Review Questions",
+    "section": "Chapter 8: Identity and Access Management",
+    "file": "study-guide/sybex_cisa_study_guide_part2.md",
+    "line": 10717,
+    "chunk": "study-guide/chunks/p2_07_appB_review_answers_02.md",
+    "cite": "Sybex CISA Study Guide (Gregory & Chapple, 2025), Appendix B Answers to Review Questions, \"Chapter 8: Identity and Access Management\", study-guide/sybex_cisa_study_guide_part2.md line 10717"
+   }
+  ]
+ },
+ {
+  "kind": "theme",
+  "theme": "CISM 2026 update is not a CISA update",
+  "status": "not_found",
+  "label": "not found in Sybex guide",
+  "note": "The book (2025) predates the CISM 2026 update. Its cover says it covers the '2024-2029 exam objectives' (p1:7), which is a vendor statement, not an ISACA review schedule.",
+  "book_refs": []
+ }
+]
