@@ -11,5 +11,6 @@ python3 enrich_from_sybex.py --write                            # backup + overw
 ```
 
 Inputs live in `/mnt/project-files/` (not in this repo). Core Python only. Rerunnable: items with
-`added_by: enrich_from_sybex.py` are removed before each run. Existing definitions, ISACA values and
-conflict resolutions are not changed; book disagreements become new `source_conflicts` with a resolution.
+`added_by: enrich_from_sybex.py` are removed before each run. Existing definitions and ISACA values are not
+changed. Book disagreements are written with their resolution to `source_conflicts_log.json` next to the wiki
+(with `--write`); the wiki only gets the result as a `key_facts` entry.

@@ -291,6 +291,10 @@ def write(out_dir, manifest, key):
             (out_dir / p["file"]).write_bytes(p.pop("_body"))
     mpath = out_dir / "manifest.json"
     allm = json.loads(mpath.read_text()) if mpath.exists() else {}
+    new = {p.get("file") for p in manifest["parts"]}
+    for p in allm.get(key, {}).get("parts", []):  # chunks of the previous run that no longer exist
+        if p.get("file") and p["file"] not in new and (out_dir / p["file"]).exists():
+            (out_dir / p["file"]).unlink()
     allm[key] = manifest
     mpath.write_text(json.dumps(allm, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     write_index(out_dir, allm)
