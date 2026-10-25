@@ -10,7 +10,8 @@ The book is not read by hand. Code parses headings, chapter boundaries, exam tip
 Exam Essentials, review questions (+ Appendix B answers), the assessment test,
 bold definition lists and the index, then maps them to wiki domains/subtopics/
 glossary terms by keyword overlap. A small set of fact checks compares book claims
-with wiki values; disagreements become source_conflicts with a resolution.
+with wiki values. Disagreements are written to source_conflicts_log.json (next to the
+wiki) with a resolution; the wiki only gets the result as a key_facts entry.
 
 Rerunnable: items added by a previous run (added_by == SCRIPT) are removed first.
 Existing ISACA-sourced or resolved values are never changed.
@@ -34,6 +35,15 @@ SCRIPT = "enrich_from_sybex.py"
 TODAY = datetime.date.today().isoformat()
 PF = pathlib.Path("/mnt/project-files")
 WIKI = PF / "cisa-wiki" / "CISA exam domains wiki.json"
+CONFLICT_LOG = PF / "cisa-wiki" / "source_conflicts_log.json"
+# book conflict topic -> key fact shown in the wiki (None: an existing key fact already covers it)
+KEY_FACT = {
+    "ITAF edition in the Sybex study guide": None,
+    "COBIT 2019 principle count in the Sybex study guide": (
+        "COBIT 2019 principle count", "COBIT 2019: 6 governance system principles + 3 governance framework principles (COBIT 5 had 5 principles).", ["D2"]),
+    "Job practice topic list in the Sybex study guide objective map": (
+        "Topic list to study by", "Study by the wiki's ISACA 2024 subtopic list; use the Sybex chapters as reading material.", []),
+}
 PART1 = PF / "study-guide" / "sybex_cisa_study_guide_part1.md"
 PART2 = PF / "study-guide" / "sybex_cisa_study_guide_part2.md"
 BOOK = {
@@ -554,8 +564,8 @@ def fact_checks(bk, wiki):
                         "wiki": "US$575/US$760 found in wiki text" if ok else "not found in wiki",
                         "result": "agree" if ok else "not_in_wiki", "book_ref": bk.ref(line_of(m.start()))["cite"]})
 
-    # 4. ITAF edition: wiki resolved conflict says 5th ed. (2026-02-26) is current
-    itaf = next((c for c in wiki["source_conflicts"] if c["topic"].startswith("ITAF edition")), None)
+    # 4. ITAF edition: wiki key fact says 5th ed. (2026-02-26) is current
+    itaf = next((c for c in wiki["key_facts"] if c["topic"].startswith("ITAF")), None)
     hits = [mm for mm in re.finditer(r"(fourth|4th)(?: and current)? edition", text, re.I)
             if "ITAF" in text[max(0, mm.start() - 300): mm.end() + 100]]
     if hits and itaf:
@@ -564,8 +574,8 @@ def fact_checks(bk, wiki):
                         "result": "conflict", "book_ref": "; ".join(r["cite"] for r in refs)})
         conflicts.append({
             "topic": "ITAF edition in the Sybex study guide",
-            "isaca_position": itaf["isaca_position"],
-            "isaca_source": itaf["isaca_source"],
+            "isaca_position": itaf["fact"],
+            "isaca_source": "; ".join(itaf["source_urls"]),
             "third_party_position": "The Sybex CISA Study Guide (2025) calls the ITAF 4th edition (2020) the current edition.",
             "third_party_source": None,
             "third_party_book_ref": [r["cite"] for r in refs],
@@ -573,8 +583,8 @@ def fact_checks(bk, wiki):
             "notes": "The book was published in 2025, before ITAF 5th ed. Same issue as the resolved conflict \"ITAF edition: 4th vs 5th\".",
             "resolution": {
                 "status": "resolved",
-                "answer_to_study": itaf["resolution"]["answer_to_study"],
-                "deciding_source": itaf["resolution"]["deciding_source"],
+                "answer_to_study": itaf["fact"],
+                "deciding_source": itaf["source_urls"],
                 "deciding_source_type": "isaca",
                 "reason": "ISACA decides exam facts; the ISACA press release of 26 Feb 2026 postdates the book. Taken over from the existing resolution.",
                 "checked": TODAY,
@@ -696,7 +706,7 @@ def strip_previous(wiki):
     for g in wiki["glossary"]:
         for k in ("book_definition", "book_ref"):
             g.pop(k, None)
-    for k in ("glossary", "source_conflicts", "unverified_items"):
+    for k in ("glossary", "key_facts", "unverified_items"):
         wiki[k] = [x for x in wiki[k] if x.get("added_by") != SCRIPT]
     wiki["meta"].pop("book_enrichment", None)
 
@@ -822,13 +832,16 @@ def enrich(wiki, domains):
     om_summary, om_conf = objective_map_conflict(bk, wiki, mp)
     if om_conf:
         confs.append(om_conf)
-    wiki["source_conflicts"] += confs
+    for c in confs:
+        kf = KEY_FACT.get(c["topic"], (c["topic"], c["resolution"]["answer_to_study"], []))
+        if kf:
+            r = c["resolution"]
+            wiki["key_facts"].append({"topic": kf[0], "fact": kf[1], "source_urls": list(r["deciding_source"]),
+                                      "source_type": r["deciding_source_type"], "checked": r["checked"], "domains": kf[2],
+                                      "added_by": SCRIPT})
+            counts["key_facts"] += 1
     wiki["unverified_items"] += unv
-    counts["source_conflicts"] = len(confs)
     counts["unverified_items"] = len(unv)
-    cr = wiki["meta"].get("conflict_resolution", {})
-    cr["resolved"] = sum(1 for c in wiki["source_conflicts"] if (c.get("resolution") or {}).get("status") == "resolved")
-    cr["unresolved"] = len(wiki["source_conflicts"]) - cr["resolved"]
 
     wiki["meta"]["book_enrichment"] = {
         "date": TODAY, "script": f"/mnt/project-files/cisa-wiki/{SCRIPT}", "book": BOOK,
@@ -838,11 +851,20 @@ def enrich(wiki, domains):
                    "token overlap (stemmed, IDF-weighted, small synonym list) within the chapter's domain. Ch1=D2, Ch2=D1, "
                    "Ch3=D3, Ch4-5=D4 Part A, Ch6=D4 Part B, Ch7-8=D5 (book objective map); Ch9=D1 (our mapping). Fact checks "
                    "are targeted regexes; glossary definitions are shown next to the wiki's, not compared automatically."),
-        "rules": "basis 'book' = third-party book, no URL; book_ref gives chapter, section, file and line. Existing definitions, ISACA values and resolutions are not changed.",
-        "counts": dict(counts), "fact_checks": checks, "objective_map_check": om_summary,
+        "rules": "basis 'book' = third-party book, no URL; book_ref gives chapter, section, file and line. Existing definitions and ISACA values are not changed.",
+        "counts": dict(counts), "objective_map_check": om_summary,
         "parse_warnings": q_problems,
     }
-    return counts, q_problems
+    return counts, q_problems, confs, checks
+
+
+def update_conflict_log(confs, checks):
+    """Replace this script's records in the conflict log; the wiki itself holds only key_facts."""
+    log = json.loads(CONFLICT_LOG.read_text(encoding="utf-8")) if CONFLICT_LOG.exists() else {"conflicts": []}
+    log["conflicts"] = [c for c in log["conflicts"] if c.get("added_by") != SCRIPT] + confs
+    log["book_fact_checks"] = checks
+    log["updated"] = TODAY
+    CONFLICT_LOG.write_text(json.dumps(log, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
 def main():
@@ -854,14 +876,15 @@ def main():
     wiki = json.loads(WIKI.read_text(encoding="utf-8"))
     strip_previous(wiki)
     domains = set(a.domains.split(","))
-    counts, problems = enrich(wiki, domains)
+    counts, problems, confs, checks = enrich(wiki, domains)
     data = json.dumps(wiki, ensure_ascii=False, indent=1)
     if a.write:
         stamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")
         bak = WIKI.with_name(f"{WIKI.stem}.backup-{stamp}.json")
         shutil.copy2(WIKI, bak)
         WIKI.write_text(data, encoding="utf-8")
-        print(f"backup: {bak}\nwrote: {WIKI}")
+        update_conflict_log(confs, checks)
+        print(f"backup: {bak}\nwrote: {WIKI}\nupdated: {CONFLICT_LOG}")
     else:
         out = pathlib.Path(a.out) if a.out else WIKI.with_name(WIKI.stem + ".preview.json")
         out.write_text(data, encoding="utf-8")

@@ -109,7 +109,7 @@ section { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .jump { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .85rem; }
 .entries { display: flex; flex-direction: column; gap: 10px; }
 .entry { border: 1px solid hsl(var(--border)); border-radius: var(--r); background: hsl(var(--card)); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.entry.conflict { border-left: 4px solid hsl(var(--warn)); }
+.entry.fact { border-left: 4px solid hsl(var(--ok)); }
 .entry.unv { border-left: 4px solid hsl(var(--muted-fg)); }
 .ehead { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
 .ehead h3 { flex: 1 1 260px; min-width: 0; }
@@ -130,12 +130,6 @@ ul.dist { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column;
 .pill.kind { background: transparent; color: hsl(var(--muted-fg)); border-color: hsl(var(--border)); }
 .pill.dom { color: hsl(var(--dc)); border-color: hsl(var(--dc) / .6); }
 .pill.cand { color: hsl(var(--warn)); border-color: hsl(var(--warn) / .6); }
-.pos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.pos > div { border: 1px solid hsl(var(--border)); border-radius: var(--r); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; font-size: .9rem; min-width: 0; }
-.pos .isa { border-color: hsl(var(--primary) / .5); }
-.res { border: 1px solid hsl(var(--ok) / .6); background: hsl(var(--ok) / .07); border-radius: var(--r); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; font-size: .9rem; min-width: 0; }
-.res.open { border-color: hsl(var(--warn) / .6); background: hsl(var(--warn) / .07); }
-.res p { margin: 0; }
 .tbl-wrap { overflow-x: auto; }
 table.src { width: 100%; border-collapse: collapse; font-size: .82rem; }
 table.src td, table.src th { text-align: left; padding: 6px 8px; border-bottom: 1px solid hsl(var(--border)); vertical-align: top; }
@@ -157,7 +151,6 @@ footer { font-size: .78rem; color: hsl(var(--muted-fg)); border-top: 1px solid h
   nav.side a .lbl { display: none; }
   nav.side a .lbl.keep { display: inline; }
   .wrow { grid-template-columns: minmax(0, 1fr); }
-  .pos { grid-template-columns: minmax(0, 1fr); }
   .kv { grid-template-columns: minmax(0, 1fr); }
   .kv dt { padding-top: 6px; }
   .selects { flex-basis: 100%; flex-wrap: nowrap; }
@@ -206,7 +199,7 @@ const KINDS = {
   source:     { label: 'Sources',              one: 'Source' },
   theme:      { label: 'Cross-domain themes',  one: 'Theme' },
   glossary:   { label: 'Glossary',             one: 'Term' },
-  conflict:   { label: 'Source conflicts',     one: 'Conflict' },
+  fact:       { label: 'Key facts',            one: 'Key fact' },
   unverified: { label: 'Unverified items',     one: 'Unverified' },
 };
 const KIND_ORDER = Object.keys(KINDS);
@@ -238,7 +231,7 @@ function shortUrl(u) {
 /* ---------- URL registry: one verified state per URL ---------- */
 const URLS = new Map();
 const US = ((W.meta || {}).link_check || {}).url_status || {};
-const US_LABEL = { ok: 'verified', partial: 'partial', blocked: 'blocked', unreadable: 'unreadable', dead: 'dead' };
+const US_LABEL = { ok: 'verified', partial: 'partial' };
 function noteUrl(u, info = {}) {
   if (!u || typeof u !== 'string') return;
   const cur = URLS.get(u) || { verified: false, tags: new Set() };
@@ -262,11 +255,6 @@ function add(kind, domain, raw, urls, extra = {}) {
   urls.forEach(u => noteUrl(u));
   E.push({ kind, domain, raw, urls, text: JSON.stringify(raw).toLowerCase(), domains: domain ? [domain] : [], ...extra });
 }
-function mentionedDomains(...strs) {
-  const out = new Set(), re = /\b(?:Domain\s*|D)([1-9])\b/g;
-  strs.forEach(s => { if (typeof s === 'string') for (const m of s.matchAll(re)) if (DMAP['D' + m[1]]) out.add('D' + m[1]); });
-  return [...out];
-}
 for (const d of DOMAINS) {
   (d.sources || []).forEach(s => noteUrl(s.url, { verified: s.verified, tag: s.tag }));
   (d.third_party_resources || []).forEach(r => noteUrl(r.url, { verified: r.verified, tag: r.source_type }));
@@ -286,8 +274,8 @@ for (const d of DOMAINS) {
 }
 (W.cross_domain_themes || []).forEach(t => add('theme', null, t, [t.source_url, ...asList(t.additional_source_urls)], { domains: asList(t.domains).filter(x => DMAP[x]) }));
 (W.glossary || []).forEach(g => add('glossary', DMAP[g.domain] ? g.domain : null, g, [g.source_url]));
-(W.source_conflicts || []).forEach((c, i) => add('conflict', null, c, [c.isaca_source, c.third_party_source, ...asList((c.resolution || {}).deciding_source)], {
-  idx: i, domains: mentionedDomains(c.topic, c.isaca_position, c.third_party_position, c.notes),
+(W.key_facts || []).forEach((f, i) => add('fact', null, f, asList(f.source_urls), {
+  idx: i, domains: asList(f.domains).filter(x => DMAP[x]),
 }));
 (W.unverified_items || []).forEach(u => add('unverified', DMAP[u.domain] ? u.domain : null, u, [u.url]));
 
@@ -304,8 +292,8 @@ const ALL_URLS = [...URLS.keys()];
 const N_VERIFIED = ALL_URLS.filter(u => URLS.get(u).verified).length;
 
 /* ---------- state ---------- */
-const VIEWS = ['overview', ...DIDS, 'conflicts', 'themes', 'glossary', 'unverified'];
-const VIEW_KIND = { conflicts: 'conflict', themes: 'theme', glossary: 'glossary', unverified: 'unverified' };
+const VIEWS = ['overview', ...DIDS, 'facts', 'themes', 'glossary', 'unverified'];
+const VIEW_KIND = { facts: 'fact', themes: 'theme', glossary: 'glossary', unverified: 'unverified' };
 const S = { view: 'overview', q: '', kinds: new Set(), basis: '', src: '', link: '' };
 let SHOW_ALL = new Set();
 
@@ -361,7 +349,7 @@ function domPills(e) {
 }
 function kindPill(e, show) { return show ? `<span class="pill kind">${KINDS[e.kind].one}</span>` : ''; }
 function lcRows(o) {
-  return [['Flag', o.flag], ['Link check', o.link_check], ['Links removed', asList(o.dead_links).map(d => `${d.url} (${d.field}): ${d.note}`)]];
+  return [['Flag', o.flag], ['Link check', o.link_check]];
 }
 function bookCite(r) {
   if (!r) return '';
@@ -369,11 +357,6 @@ function bookCite(r) {
 }
 function bookRefs(list) {
   return asList(list).map(r => `${r.chapter.replace(/^Ch (\d+) .*/, 'Ch $1')} · ${r.section} (L${r.line})`);
-}
-function resBlock(r) {
-  if (!r) return '';
-  const ok = r.status === 'resolved';
-  return `<div class="res ${ok ? '' : 'open'}"><span class="eyebrow">${ok ? 'Resolution: study this' : 'Unresolved: best current answer'}</span><p><b>${hl(r.answer_to_study)}</b></p><p class="muted">${hl(r.reason)}${r.checked ? ` (checked ${esc(r.checked)})` : ''}</p>${asList(r.deciding_source).length ? links(asList(r.deciding_source)) : '<div class="link"><span class="pill src">no deciding source</span></div>'}</div>`;
 }
 function kv(pairs) {
   const rows = pairs.filter(([, v]) => v != null && v !== '' && !(Array.isArray(v) && !v.length));
@@ -415,14 +398,10 @@ const R = {
     ${opts.length ? `<ol class="dist" style="list-style:none;padding-left:0;margin:0">${opts.map(([k, v]) => `<li><b class="mono">${esc(k)}.</b> ${hl(v)}</li>`).join('')}</ol>` : ''}
     <details><summary class="muted" style="cursor:pointer">Answer${q.maps_to_subtopic ? ' · maps to ' + esc(q.maps_to_subtopic) : ''}</summary>${kv([['Answer', q.answer || 'not parsed'], ['Explanation', q.explanation], ['Answer source', q.answer_ref]])}</details>
     ${bookCite(q.book_ref)}</article>`; },
-  conflict: (e, ctx) => { const c = e.raw; return `<article class="entry conflict" id="conflict-${e.idx}">
-    <div class="ehead"><h3>${hl(c.topic)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}${c.resolution ? (c.resolution.status === 'resolved' ? '<span class="pill v-yes">resolved</span>' : '<span class="pill cand">unresolved</span>') : '<span class="pill cand">listed, not resolved</span>'}</div>
-    <div class="pos">
-      <div class="isa"><span class="eyebrow">ISACA position</span><p>${hl(c.isaca_position) || '<span class="muted">Not stated</span>'}</p>${links(extractUrls(c.isaca_source), 'No ISACA source URL.')}</div>
-      <div><span class="eyebrow">Third-party position</span><p>${hl(c.third_party_position) || '<span class="muted">Not stated</span>'}</p>${c.third_party_book_ref ? asList(c.third_party_book_ref).map(bookCite).join('') : links(extractUrls(c.third_party_source), 'No third-party source URL.')}</div>
-    </div>
-    ${resBlock(c.resolution)}
-    ${c.notes ? `<p class="muted" style="font-size:.88rem">${hl(c.notes)}</p>` : ''}${kv(lcRows(c))}</article>`; },
+  fact: (e, ctx) => { const f = e.raw; return `<article class="entry fact" id="fact-${e.idx}">
+    <div class="ehead"><h3>${hl(f.topic)}</h3>${kindPill(e, ctx.mixed)}${domPills(e)}${srcPill(f.source_type)}</div>
+    <p><b>${hl(f.fact)}</b>${f.checked ? ` <span class="muted" style="font-size:.85rem">(checked ${esc(f.checked)})</span>` : ''}</p>
+    ${links(e.urls)}</article>`; },
   unverified: (e, ctx) => { const u = e.raw; const isVid = !!u.video_id; return `<article class="entry unv">
     <div class="ehead"><h3>${hl(isVid ? (u.title_as_seen || u.item) : u.item)}</h3>${kindPill(e, ctx.mixed)}${ctx.showDom ? domPills(e) : ''}${isVid ? '<span class="pill cand">video candidate</span>' : ''}${u.status === 'resolved' ? '<span class="pill v-yes">resolved</span>' : ''}</div>
     ${kv([isVid ? ['Channel', u.channel] : ['', null], isVid ? ['Title (oEmbed)', u.title_confirmed] : ['', null], ['Reason', u.reason], ['Needed action', u.needed_action], ['Attempt', u.attempt]])}
@@ -431,10 +410,10 @@ const R = {
 
 function sourceTable(list) {
   return `<div class="tbl-wrap"><table class="src"><thead><tr><th>Status</th><th>Type</th><th>URL</th><th>Note</th></tr></thead><tbody>${list.map(e => {
-    const u = e.raw.url, dead = asList(e.raw.dead_links)[0];
-    const st = u ? linkRow(u).match(/<span class="pill [^"]*"[^>]*>[^<]*<\/span>/)[0] : '<span class="pill v-no">dead</span>';
-    const cell = u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(u)}">${hl(shortUrl(u))}</a>` : `<span class="muted" title="${esc(dead ? dead.note : '')}">${esc(dead ? shortUrl(dead.url) : 'removed')} (removed)</span>`;
-    const note = [e.raw.note, e.raw.link_check, dead && dead.note].filter(Boolean).join(' · ');
+    const u = e.raw.url;
+    const st = linkRow(u).match(/<span class="pill [^"]*"[^>]*>[^<]*<\/span>/)[0];
+    const cell = `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(u)}">${hl(shortUrl(u))}</a>`;
+    const note = [e.raw.note, e.raw.link_check].filter(Boolean).join(' · ');
     return `<tr><td>${st}</td><td>${srcPill(e.raw.tag) || '<span class="muted">—</span>'}</td>
       <td>${cell}</td><td>${hl(note)}</td></tr>`; }).join('')}</tbody></table></div>`;
 }
@@ -456,7 +435,7 @@ function groupSections(list, ctx, keyPrefix, kinds = KIND_ORDER) {
 function weightsBlock() {
   const max = Math.max(30, ...DOMAINS.map(d => Math.max(d.weight_percent || 0, d.weight_2019_percent || 0)));
   return `<section><div class="sec-h"><h2>Domain weights</h2><span class="n">2024 job practice vs 2019</span></div>
-    <div class="legend"><span>2024 (current, ISACA)</span><span class="old">2019 (superseded; still shown by some third-party guides)</span></div>
+    <div class="legend"><span>2024 (current, ISACA)</span><span class="old">2019 (superseded)</span></div>
     <div class="weights">${DOMAINS.map(d => `<div class="wrow" data-d="${d.id}">
       <div class="nm"><span class="dot"></span><span class="mono">${d.id}</span><a href="#${d.id}">${esc(d.name)}</a></div>
       <div class="bars"><div class="b"><i style="width:${(d.weight_percent / max * 100).toFixed(1)}%"></i>${d.weight_percent}%</div>
@@ -467,8 +446,7 @@ function counts(id) {
 }
 function viewOverview() {
   const m = W.meta || {}, x = m.exam || {};
-  const nConf = (W.source_conflicts || []).length, nUnv = (W.unverified_items || []).length;
-  const nRes = (W.source_conflicts || []).filter(c => (c.resolution || {}).status === 'resolved').length;
+  const nFacts = (W.key_facts || []).length, nUnv = (W.unverified_items || []).length;
   return `<div class="dhead" style="--dc:var(--primary)">
       <span class="eyebrow">${esc(m.job_practice_version || '')}</span>
       <h1>CISA exam domains wiki</h1>
@@ -476,7 +454,7 @@ function viewOverview() {
     </div>
     <div class="status">
       <a class="stat ${N_VERIFIED === ALL_URLS.length ? 'ok' : 'bad'}" href="#unverified"><span class="eyebrow">Link check</span><b>${N_VERIFIED} / ${ALL_URLS.length}</b><span class="muted">distinct URLs verified</span></a>
-      <a class="stat warn" href="#conflicts"><span class="eyebrow">Source conflicts</span><b>${nConf}</b><span class="muted">${nRes} resolved, ${nConf - nRes} unresolved</span></a>
+      <a class="stat ok" href="#facts"><span class="eyebrow">Key facts</span><b>${nFacts}</b><span class="muted">each with its deciding source</span></a>
       <a class="stat" href="#unverified"><span class="eyebrow">Unverified items</span><b>${nUnv}</b><span class="muted">follow-ups (some marked resolved)</span></a>
     </div>
     ${m.method ? `<details class="callout"><summary>How this wiki was researched (read before relying on it)</summary><p>${esc(m.method)}</p></details>` : ''}
@@ -485,15 +463,15 @@ function viewOverview() {
     <section><div class="sec-h"><h2>Domains</h2></div><div class="dgrid">${DOMAINS.map(d => { const c = counts(d.id); return `<a class="dcard" data-d="${d.id}" href="#${d.id}">
       <span class="eyebrow">${d.id} · ${d.weight_percent}%</span><h3 style="font-family:var(--f-display);font-size:1.05rem">${esc(d.name)}</h3>
       <div class="counts">${['subtopic', 'trap', 'example', 'resource', 'source', 'question'].map(k => `<span>${c[k] || 0} ${KINDS[k].label.toLowerCase()}</span>`).join('')}</div></a>`; }).join('')}</div></section>
-    <section><div class="sec-h"><h2>Source conflicts</h2><span class="n">${nConf} listed, ${nRes} resolved</span></div>
-      <p class="muted" style="font-size:.88rem">Where sources disagree, both positions are kept and each conflict shows its resolution with the deciding source. ISACA (isaca.org) decides exam facts; primary sources decide incident and standards facts.</p>
-      <div class="jump">${(W.source_conflicts || []).map((c, i) => `<a href="#conflicts" data-conf="${i}">${esc(c.topic)}</a>`).join('')}</div></section>`;
+    <section><div class="sec-h"><h2>Key facts</h2><span class="n">${nFacts}</span></div>
+      <p class="muted" style="font-size:.88rem">Facts to study, each with its deciding source. ISACA (isaca.org) decides exam facts; primary sources decide incident and standards facts.</p>
+      <div class="jump">${(W.key_facts || []).map((f, i) => `<a href="#facts" data-fact="${i}">${esc(f.topic)}</a>`).join('')}</div></section>`;
 }
 function viewDomain(id) {
   const d = DMAP[id];
   const list = E.filter(e => inScope(e) && passesFilters(e));
-  const conf = list.filter(e => e.kind === 'conflict');
-  const rest = list.filter(e => e.kind !== 'conflict');
+  const conf = list.filter(e => e.kind === 'fact');
+  const rest = list.filter(e => e.kind !== 'fact');
   const kindsHere = KIND_ORDER.filter(k => rest.some(e => e.kind === k));
   const noVideos = !(d.youtube_explainers || []).length;
   const ctx = { mixed: false, showDom: false };
@@ -501,9 +479,9 @@ function viewDomain(id) {
       <span class="eyebrow">${id}</span><h1>${esc(d.name)}</h1>
       <div class="w"><span><b>${d.weight_percent}%</b> of exam (2024)</span>${d.weight_2019_percent != null ? `<span class="muted">2019 weight: ${d.weight_2019_percent}% (superseded)</span>` : ''}</div>
       ${d.summary ? `<p class="summary">${hl(d.summary)}</p>` : ''}
-      <div class="jump">${conf.length ? `<a href="#${id}" data-jump="${id}-conflict">Conflicts (${conf.length})</a>` : ''}${kindsHere.map(k => `<a href="#${id}" data-jump="${id}-${k}">${KINDS[k].label} (${rest.filter(e => e.kind === k).length})</a>`).join('')}</div>
+      <div class="jump">${conf.length ? `<a href="#${id}" data-jump="${id}-fact">Key facts (${conf.length})</a>` : ''}${kindsHere.map(k => `<a href="#${id}" data-jump="${id}-${k}">${KINDS[k].label} (${rest.filter(e => e.kind === k).length})</a>`).join('')}</div>
     </div>
-    ${conf.length ? `<section id="${id}-conflict"><div class="sec-h"><h2>Source conflicts that mention ${id}</h2><span class="n">${conf.length}</span></div>${renderList('conflict', conf, ctx, id + 'conflict')}</section>` : ''}
+    ${conf.length ? `<section id="${id}-fact"><div class="sec-h"><h2>Key facts for ${id}</h2><span class="n">${conf.length}</span></div>${renderList('fact', conf, ctx, id + 'fact')}</section>` : ''}
     ${groupSections(rest, ctx, id)}
     ${noVideos && !filtersActive() ? `<section><div class="sec-h"><h2>YouTube explainers</h2><span class="n">0</span></div><div class="empty">No video is listed for this domain yet. Remaining candidates are under <a href="#unverified">Unverified items</a>.</div></section>` : ''}
     ${!list.length ? '<div class="empty">Nothing in this domain matches the current search and filters.</div>' : ''}`;
@@ -513,7 +491,7 @@ function viewKind(view) {
   let list = E.filter(e => inScope(e) && passesFilters(e, true));
   if (k === 'glossary') list = list.slice().sort((a, b) => a.raw.term.localeCompare(b.raw.term));
   const intro = {
-    conflicts: 'Sources disagree on these points. Both positions stay listed; the green box gives the answer to study, the deciding source and the reason. ISACA (isaca.org) decides exam facts; primary sources (regulators, government reports, standards bodies, company releases) decide the rest. Amber boxes could not be decided from reachable sources.',
+    facts: 'Facts to study, each with its deciding source. ISACA (isaca.org) decides exam facts; primary sources (regulators, government reports, standards bodies, company releases) decide the rest.',
     themes: 'Themes that cut across domains.',
     glossary: 'Terms with definitions. Basis shows whether the text comes from an ISACA glossary snippet, an unverified paraphrase or the Sybex study guide (third-party book, cited by chapter and line). Book definitions are shown next to the wiki definition, not merged.',
     unverified: 'Follow-ups that still need a page to be opened and checked, including YouTube candidates that are not listed as explainers yet.',
@@ -525,28 +503,28 @@ function viewKind(view) {
   } else {
     body = renderList(k, list, { mixed: false, showDom: true }, view);
   }
-  return `<div class="dhead" style="--dc:var(--${k === 'conflict' ? 'warn' : 'muted-fg'})"><span class="eyebrow">${list.length} entries</span><h1>${KINDS[k].label}</h1><p class="summary muted">${intro}</p></div>
+  return `<div class="dhead" style="--dc:var(--${k === 'fact' ? 'ok' : 'muted-fg'})"><span class="eyebrow">${list.length} entries</span><h1>${KINDS[k].label}</h1><p class="summary muted">${intro}</p></div>
     ${body || '<div class="empty">Nothing matches the current search and filters.</div>'}`;
 }
 function viewResults() {
   const list = E.filter(e => passesFilters(e));
   const ctx = { mixed: false, showDom: true };
   return `<div class="dhead" style="--dc:var(--primary)"><span class="eyebrow">Whole wiki</span><h1>${list.length} result${list.length === 1 ? '' : 's'}</h1>
-    <p class="muted">${TOKENS.length ? `Matching “${esc(S.q)}”` : 'Filtered'} across all domains, themes, glossary, conflicts and unverified items. Pick a domain on the left to narrow it.</p></div>
+    <p class="muted">${TOKENS.length ? `Matching “${esc(S.q)}”` : 'Filtered'} across all domains, key facts, themes, glossary and unverified items. Pick a domain on the left to narrow it.</p></div>
     ${list.length ? groupSections(list, ctx, 'all') : '<div class="empty">No entries match. Try fewer words or clear a filter.</div>'}`;
 }
 
 /* ---------- chrome ---------- */
 function renderNav() {
-  const nConf = (W.source_conflicts || []).length;
+  const nFacts = (W.key_facts || []).length;
   const scoped = v => E.filter(e => { const sv = S.view; S.view = v; const r = inScope(e) && passesFilters(e, !!VIEW_KIND[v]); S.view = sv; return r; }).length;
-  const item = (v, id, label, cnt, cls = '', d = '') => `<a href="#${v}" ${d ? `data-d="${d}"` : ''} ${S.view === v ? 'aria-current="page"' : ''}>${id}<span class="lbl ${cls}">${esc(label)}</span><span class="cnt ${v === 'conflicts' ? 'warn' : ''}">${cnt}</span></a>`;
+  const item = (v, id, label, cnt, cls = '', d = '') => `<a href="#${v}" ${d ? `data-d="${d}"` : ''} ${S.view === v ? 'aria-current="page"' : ''}>${id}<span class="lbl ${cls}">${esc(label)}</span><span class="cnt">${cnt}</span></a>`;
   document.getElementById('nav').innerHTML =
     item('overview', '', filtersActive() ? 'All results' : 'Overview', filtersActive() ? scoped('overview') : '', 'keep') +
     '<span class="eyebrow grp">Domains</span>' +
     DOMAINS.map(d => item(d.id, `<span class="dot"></span><span class="id">${d.id}</span>`, d.name, scoped(d.id), '', d.id)).join('') +
     '<span class="eyebrow grp">Across domains</span>' +
-    item('conflicts', '', 'Source conflicts', filtersActive() ? scoped('conflicts') : nConf, 'keep') +
+    item('facts', '', 'Key facts', filtersActive() ? scoped('facts') : nFacts, 'keep') +
     item('themes', '', 'Cross-domain themes', scoped('themes'), 'keep') +
     item('glossary', '', 'Glossary', scoped('glossary'), 'keep') +
     item('unverified', '', 'Unverified items', scoped('unverified'), 'keep');
@@ -591,7 +569,7 @@ document.getElementById('f-basis').addEventListener('change', ev => { S.basis = 
 document.getElementById('f-src').addEventListener('change', ev => { S.src = ev.target.value; render(true); });
 document.getElementById('f-link').addEventListener('change', ev => { S.link = ev.target.value; render(true); });
 document.addEventListener('click', ev => {
-  const t = ev.target.closest('[data-kind],[data-reset],[data-more],[data-jump],[data-conf]');
+  const t = ev.target.closest('[data-kind],[data-reset],[data-more],[data-jump],[data-fact]');
   if (!t) return;
   if (t.dataset.kind) { const k = t.dataset.kind; S.kinds.has(k) ? S.kinds.delete(k) : S.kinds.add(k); render(true); }
   else if (t.dataset.reset) {
@@ -601,9 +579,9 @@ document.addEventListener('click', ev => {
   }
   else if (t.dataset.more) { SHOW_ALL.add(t.dataset.more); render(true); }
   else if (t.dataset.jump) { ev.preventDefault(); document.getElementById(t.dataset.jump)?.scrollIntoView({ block: 'start' }); window.scrollBy(0, -130); }
-  else if (t.dataset.conf) {
-    ev.preventDefault(); location.hash = 'conflicts';
-    setTimeout(() => { const el = document.getElementById('conflict-' + t.dataset.conf); if (el) { el.scrollIntoView({ block: 'start' }); window.scrollBy(0, -130); } }, 30);
+  else if (t.dataset.fact) {
+    ev.preventDefault(); location.hash = 'facts';
+    setTimeout(() => { const el = document.getElementById('fact-' + t.dataset.fact); if (el) { el.scrollIntoView({ block: 'start' }); window.scrollBy(0, -130); } }, 30);
   }
 });
 window.addEventListener('hashchange', () => { readHash(); SHOW_ALL.clear(); render(); });

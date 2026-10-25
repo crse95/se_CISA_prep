@@ -11,7 +11,7 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent
 DEFAULT_IN = pathlib.Path("/mnt/project-files/cisa-wiki/CISA exam domains wiki.json")
 DEFAULT_OUT = pathlib.Path("/mnt/project-files/cisa-wiki/browser/cisa-wiki-browser.html")
-REQUIRED = ["meta", "domains", "cross_domain_themes", "glossary", "source_conflicts", "unverified_items"]
+REQUIRED = ["meta", "domains", "cross_domain_themes", "glossary", "key_facts", "unverified_items"]
 
 
 def embed(obj):
@@ -42,7 +42,7 @@ def main():
     records = [r for d in wiki["domains"] for k in ("sources", "third_party_resources", "real_world_examples", "youtube_explainers") for r in d.get(k, [])]
     verified = sum(1 for r in records if r.get("verified") is True)
     print(f"wrote {out} ({out.stat().st_size // 1024} KB)")
-    print(f"domains={len(wiki['domains'])} conflicts={len(wiki['source_conflicts'])} "
+    print(f"domains={len(wiki['domains'])} key_facts={len(wiki['key_facts'])} "
           f"unverified_items={len(wiki['unverified_items'])} url_records_verified={verified}/{len(records)}")
 
 
