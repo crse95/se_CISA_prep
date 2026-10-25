@@ -588,11 +588,34 @@ def fact_checks(bk, wiki):
         r = bk.ref(line_of(m.start()))
         results.append({"check": "COBIT 2019 principle count", "book": f"'{m.group(1)}' and '{m.group(3)}' principles in the same paragraph; {m.group(2)} objectives",
                         "wiki": "wiki gives 40 objectives (EDM5/APO14/BAI11/DSS6/MEA4), no principle count",
-                        "result": "book_internal_inconsistency", "book_ref": r["cite"]})
-        unverified.append({"item": f"COBIT 2019 principle count: the Sybex guide says '{m.group(1)} principles' and then 'The {m.group(3)} principles' in one paragraph.",
-                           "reason": "Book is internally inconsistent; the wiki has no principle count.",
-                           "needed_action": "Check the count against an ISACA COBIT 2019 source before citing it.",
-                           "domain": "D2", "basis": "book", "book_ref": r, "added_by": SCRIPT})
+                        "result": "conflict (book says five, lists six; ISACA: 6 + 3 framework principles)", "book_ref": r["cite"]})
+        cobit_src = "https://www.isaca.org/resources/news-and-trends/industry-news/2020/cobit-2019-and-cobit-5-comparison"
+        conflicts.append({
+            "topic": "COBIT 2019 principle count in the Sybex study guide",
+            "isaca_position": ("COBIT 2019 has 6 governance system principles (COBIT 5 had 5) and adds 3 governance framework "
+                               "principles; 40 governance and management objectives."),
+            "isaca_source": cobit_src,
+            "third_party_position": (f"The Sybex CISA Study Guide (2025) says COBIT 2019 has '{m.group(1)} principles and "
+                                     f"{m.group(2)} control objectives' and then lists 'The {m.group(3)} principles' in the same paragraph."),
+            "third_party_source": None,
+            "third_party_book_ref": [r["cite"]],
+            "third_party_source_type": "book",
+            "notes": ("'Five' is the COBIT 5 count; the book's own list has six. The ISACA article cites COBIT 2019 Framework: "
+                      "Introduction and Methodology, figure 3.5, which was not opened."),
+            "link_check": "Checked 2026-10-25: the ISACA Industry News 2020 article loads (HTTP 200) and states 6 governance system principles vs 5 in COBIT 5, and three governance framework principles (conceptual model; open and flexible; aligned to major standards).",
+            "resolution": {
+                "status": "resolved",
+                "answer_to_study": "COBIT 2019: 6 governance system principles + 3 governance framework principles. 5 principles is COBIT 5.",
+                "deciding_source": [cobit_src],
+                "deciding_source_type": "isaca",
+                "reason": "ISACA decides; its COBIT 2019 vs COBIT 5 comparison (Industry News 2020) gives 6 vs 5 and lists the 3 framework principles. The book's 'five' contradicts its own list of six.",
+                "checked": TODAY,
+            },
+            "added_by": SCRIPT,
+        })
+        wiki["meta"]["link_check"]["url_status"][cobit_src] = {
+            "status": "ok", "note": "Loaded 2026-10-25 (curl): 6 governance system principles vs 5 in COBIT 5; 3 governance framework principles added.",
+            "added_by": SCRIPT}
     return results, conflicts, unverified
 
 
